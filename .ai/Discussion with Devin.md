@@ -1,3 +1,7 @@
+---
+link: https://deepwiki.com/search/what-are-10-features-i-could-i_4edee9e2-4daf-4cb5-9195-c8bb3e892005
+---
+
 <!-- me -->
 
 What are 10 features I could implement having low background in this space to increase quality of life, usability, or functionality? I would be leveraging AI to overcome my lack of familiarity. I have used PyTorch and numpy, but I am not an expert.
