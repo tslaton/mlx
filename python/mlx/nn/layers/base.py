@@ -638,6 +638,25 @@ class Module(dict):
 
         self.apply(lambda x: x.astype(dtype) if predicate(x.dtype) else x)
 
+    def summary(
+        self,
+        input_shape: Optional[Union[Tuple[int, ...], mx.array]] = None,
+        batch_size: int = 1,
+        verbose: int = 1,
+    ) -> str:
+        """Generate a summary of this module.
+
+        Args:
+            input_shape: Input shape (excluding batch dimension) or sample input
+            batch_size: Batch size for memory calculations 
+            verbose: 0=simple, 1=detailed with layer table
+
+        Returns:
+            String containing the model summary
+        """
+        from ..utils import summary
+        return summary(self, input_shape, batch_size, verbose=verbose)
+
 
 def _unwrap(model, value_key, value, filter_fn, map_fn, is_leaf_fn):
     if is_leaf_fn(model, value_key, value):

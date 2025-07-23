@@ -1,5 +1,6 @@
 # Copyright © 2023-2024 Apple Inc.
 
+from dataclasses import dataclass
 from functools import reduce, wraps
 from typing import Any, Callable, Optional
 
@@ -159,3 +160,196 @@ def average_gradients(
             )
 
         return tree_unflatten(new_flat_grads)
+
+
+def count_parameters(module: Module) -> tuple[int, int]:
+    """
+    Count total and trainable parameters in a module.
+    
+    Args:
+        module: The MLX module to analyze
+        
+    Returns:
+        Tuple of (total_params, trainable_params)
+    """
+    total_params = 0
+    trainable_params = 0
+    
+    # Get all parameters
+    all_params = tree_flatten(module.parameters())
+    trainable = tree_flatten(module.trainable_parameters())
+    
+    # Create set of trainable parameter ids for fast lookup
+    trainable_ids = {id(p) for _, p in trainable}
+    
+    for name, param in all_params:
+        if isinstance(param, mx.array):
+            param_count = param.size
+            total_params += param_count
+            
+            # Check if this parameter is trainable
+            if id(param) in trainable_ids:
+                trainable_params += param_count
+    
+    return total_params, trainable_params
+
+
+def simple_summary(model: Module) -> str:
+    """
+    Generate a simple parameter count summary.
+    
+    Args:
+        model: The MLX model to summarize
+        
+    Returns:
+        String containing parameter counts
+    """
+    total, trainable = count_parameters(model)
+    non_trainable = total - trainable
+    
+    return f"""Total params: {total:,}
+Trainable params: {trainable:,}
+Non-trainable params: {non_trainable:,}"""
+
+
+@dataclass
+class LayerInfo:
+    """Information about a single layer in the model."""
+    name: str
+    module_type: str
+    output_shape: Optional[tuple[int, ...]] = None
+    num_params: int = 0
+    trainable_params: int = 0
+    param_bytes: int = 0
+
+
+def collect_layer_info(model: Module) -> list[LayerInfo]:
+    """
+    Collect information about each layer in the model.
+    
+    Args:
+        model: The MLX model to analyze
+        
+    Returns:
+        List of LayerInfo objects for each layer
+    """
+    layer_infos = []
+    
+    for name, module in model.named_modules():
+        # Skip the root module
+        if module is model:
+            continue
+        
+        # Count only direct parameters of this module
+        module_params = 0
+        module_trainable = 0
+        module_bytes = 0
+        
+        # Check direct attributes of the module
+        for key, value in module.items():
+            if isinstance(value, mx.array) and not isinstance(value, Module):
+                module_params += value.size
+                module_bytes += value.nbytes
+                # Check if this parameter is trainable
+                if key not in module._no_grad:
+                    module_trainable += value.size
+        
+        layer_info = LayerInfo(
+            name=name,
+            module_type=type(module).__name__,
+            num_params=module_params,
+            trainable_params=module_trainable,
+            param_bytes=module_bytes
+        )
+        layer_infos.append(layer_info)
+    
+    return layer_infos
+
+
+def format_layer_summary(layer_infos: list[LayerInfo]) -> str:
+    """
+    Format layer information as a table.
+    
+    Args:
+        layer_infos: List of LayerInfo objects
+        
+    Returns:
+        Formatted table string
+    """
+    # Table headers
+    headers = ["Layer (type)", "Param #", "Trainable"]
+    col_widths = [40, 15, 15]
+    
+    # Build table
+    lines = []
+    lines.append("=" * sum(col_widths))
+    lines.append("".join(h.ljust(w) for h, w in zip(headers, col_widths)))
+    lines.append("=" * sum(col_widths))
+    
+    for info in layer_infos:
+        layer_str = f"{info.name} ({info.module_type})"
+        if len(layer_str) > col_widths[0] - 1:
+            layer_str = layer_str[:col_widths[0] - 4] + "..."
+        
+        param_str = f"{info.num_params:,}"
+        trainable_str = f"{info.trainable_params:,}"
+        
+        lines.append("".join([
+            layer_str.ljust(col_widths[0]),
+            param_str.ljust(col_widths[1]),
+            trainable_str.ljust(col_widths[2])
+        ]))
+    
+    lines.append("=" * sum(col_widths))
+    return "\n".join(lines)
+
+
+def summary(
+    model: Module,
+    input_shape: Optional[tuple[int, ...] | mx.array] = None,
+    batch_size: int = 1,
+    device: Optional[mx.Device] = None,
+    verbose: int = 1,
+) -> str:
+    """
+    Generate a summary of the model.
+    
+    Args:
+        model: The MLX model to summarize
+        input_shape: Input shape (excluding batch dimension) or sample input
+        batch_size: Batch size for memory calculations
+        device: Device to run the model on (currently unused)
+        verbose: 0=silent, 1=default, 2=detailed
+        
+    Returns:
+        Summary string
+    """
+    # Phase 2: Layer-by-layer summary
+    layer_infos = collect_layer_info(model)
+    
+    if verbose == 0:
+        return simple_summary(model)
+    
+    # Build the full summary
+    lines = []
+    
+    # Add layer table
+    if layer_infos:
+        lines.append(format_layer_summary(layer_infos))
+    
+    # Add total counts
+    total, trainable = count_parameters(model)
+    non_trainable = total - trainable
+    
+    lines.append(f"Total params: {total:,}")
+    lines.append(f"Trainable params: {trainable:,}")
+    lines.append(f"Non-trainable params: {non_trainable:,}")
+    lines.append("-" * 70)
+    
+    # Calculate memory usage (basic for now)
+    total_bytes = sum(info.param_bytes for info in layer_infos)
+    params_mb = total_bytes / (1024 * 1024)
+    lines.append(f"Params size (MB): {params_mb:.2f}")
+    lines.append("=" * 70)
+    
+    return "\n".join(lines)
