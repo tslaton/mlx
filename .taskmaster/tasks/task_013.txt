@@ -1,0 +1,170 @@
+# Task ID: 13
+# Title: Implement regression metrics
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Add regression metrics such as Mean Squared Error (MSE), Mean Absolute Error (MAE), and R-squared to the mlx.metrics module.
+# Details:
+Implement the following regression metrics:
+1. Mean Squared Error (MSE): average of squared differences between predictions and targets
+2. Mean Absolute Error (MAE): average of absolute differences between predictions and targets
+3. R-squared (coefficient of determination): proportion of variance in the dependent variable predictable from the independent variable(s)
+
+Example implementation for MSE:
+```python
+def mean_squared_error(predictions, targets, reduction='mean'):
+    """Calculate Mean Squared Error.
+    
+    Args:
+        predictions: Model predictions
+        targets: Ground truth values
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        MSE value
+    """
+    squared_diff = mx.square(predictions - targets)
+    
+    if reduction == 'mean':
+        return mx.mean(squared_diff)
+    elif reduction == 'sum':
+        return mx.sum(squared_diff)
+    else:  # 'none'
+        return squared_diff
+```
+
+# Test Strategy:
+Test each metric with various input shapes and types. Compare results against known values for validation. Test edge cases like perfect predictions and extreme values. Verify that the metrics handle batched inputs correctly.
+
+# Subtasks:
+## 1. Implement Mean Squared Error (MSE) metric [pending]
+### Dependencies: None
+### Description: Create a function to calculate Mean Squared Error between predictions and targets with support for different reduction methods.
+### Details:
+def mean_squared_error(predictions, targets, reduction='mean'):
+    """Calculate Mean Squared Error.
+    
+    Args:
+        predictions: Model predictions
+        targets: Ground truth values
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        MSE value
+    """
+    squared_diff = mx.square(predictions - targets)
+    
+    if reduction == 'mean':
+        return mx.mean(squared_diff)
+    elif reduction == 'sum':
+        return mx.sum(squared_diff)
+    else:  # 'none':
+        return squared_diff
+
+## 2. Implement Mean Absolute Error (MAE) metric [pending]
+### Dependencies: None
+### Description: Create a function to calculate Mean Absolute Error between predictions and targets with support for different reduction methods.
+### Details:
+def mean_absolute_error(predictions, targets, reduction='mean'):
+    """Calculate Mean Absolute Error.
+    
+    Args:
+        predictions: Model predictions
+        targets: Ground truth values
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        MAE value
+    """
+    absolute_diff = mx.abs(predictions - targets)
+    
+    if reduction == 'mean':
+        return mx.mean(absolute_diff)
+    elif reduction == 'sum':
+        return mx.sum(absolute_diff)
+    else:  # 'none':
+        return absolute_diff
+
+## 3. Implement R-squared (coefficient of determination) metric [pending]
+### Dependencies: None
+### Description: Create a function to calculate the R-squared value, which represents the proportion of variance in the dependent variable that is predictable from the independent variable(s).
+### Details:
+def r_squared(predictions, targets):
+    """Calculate R-squared (coefficient of determination).
+    
+    Args:
+        predictions: Model predictions
+        targets: Ground truth values
+        
+    Returns:
+        R-squared value
+    """
+    # Total sum of squares (proportional to variance of the data)
+    ss_tot = mx.sum(mx.square(targets - mx.mean(targets)))
+    
+    # Residual sum of squares
+    ss_res = mx.sum(mx.square(targets - predictions))
+    
+    # Handle edge case where all targets are the same value
+    if ss_tot == 0:
+        return 1.0 if mx.all(predictions == targets) else 0.0
+        
+    # R-squared formula
+    return 1 - (ss_res / ss_tot)
+
+## 4. Implement Root Mean Squared Error (RMSE) metric [pending]
+### Dependencies: 13.1
+### Description: Create a function to calculate Root Mean Squared Error, which is the square root of MSE and provides error values in the same units as the target variable.
+### Details:
+def root_mean_squared_error(predictions, targets, reduction='mean'):
+    """Calculate Root Mean Squared Error.
+    
+    Args:
+        predictions: Model predictions
+        targets: Ground truth values
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        RMSE value
+    """
+    mse = mean_squared_error(predictions, targets, reduction='none')
+    
+    if reduction == 'mean':
+        return mx.sqrt(mx.mean(mse))
+    elif reduction == 'sum':
+        return mx.sqrt(mx.sum(mse))
+    else:  # 'none':
+        return mx.sqrt(mse)
+
+## 5. Create metrics module integration and documentation [pending]
+### Dependencies: 13.1, 13.2, 13.3, 13.4
+### Description: Integrate all implemented regression metrics into the mlx.metrics module with proper documentation and examples.
+### Details:
+# Add all metrics to the mlx.metrics module
+# Ensure proper imports and exports
+
+# Example integration code:
+
+# In mlx/metrics/__init__.py:
+from .regression import (
+    mean_squared_error,
+    mean_absolute_error,
+    r_squared,
+    root_mean_squared_error
+)
+
+# Create mlx/metrics/regression.py with all implementations
+
+# Add docstrings with examples for each function:
+"""
+Example:
+    >>> import mlx.core as mx
+    >>> from mlx.metrics import mean_squared_error
+    >>> predictions = mx.array([3.0, 4.0, 5.0])
+    >>> targets = mx.array([2.5, 4.0, 5.5])
+    >>> mse = mean_squared_error(predictions, targets)
+    >>> print(mse)  # Expected output: 0.1667
+"""
+
+# Include type hints for all functions
+

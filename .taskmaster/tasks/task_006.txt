@@ -1,0 +1,88 @@
+# Task ID: 6
+# Title: Implement Focal Loss function
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Add Focal Loss to mlx.nn.losses to help handle class imbalance problems.
+# Details:
+Implement the Focal Loss function as described in the paper 'Focal Loss for Dense Object Detection'. This loss function helps address class imbalance by down-weighting well-classified examples.
+
+Implementation should:
+1. Follow the formula: FL(pt) = -alpha * (1-pt)^gamma * log(pt)
+2. Support configurable alpha and gamma parameters
+3. Work for both binary and multi-class classification
+4. Be compatible with MLX's autograd system
+
+Example implementation:
+```python
+def focal_loss(predictions, targets, alpha=0.25, gamma=2.0, reduction='mean'):
+    """Compute focal loss for classification.
+    
+    Args:
+        predictions: Predicted logits before softmax
+        targets: Ground truth labels (class indices or one-hot)
+        alpha: Weighting factor for the rare class
+        gamma: Focusing parameter that reduces the loss contribution from easy examples
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        Computed focal loss
+    """
+    if targets.ndim > 1:
+        # Handle one-hot encoded targets
+        pass
+    else:
+        # Convert class indices to one-hot
+        pass
+        
+    # Compute standard cross entropy
+    ce_loss = mx.nn.losses.cross_entropy(predictions, targets, reduction='none')
+    
+    # Apply focal loss formula
+    pt = mx.exp(-ce_loss)
+    focal_weight = alpha * mx.power(1 - pt, gamma)
+    loss = focal_weight * ce_loss
+    
+    # Apply reduction
+    if reduction == 'mean':
+        return mx.mean(loss)
+    elif reduction == 'sum':
+        return mx.sum(loss)
+    else:  # 'none'
+        return loss
+```
+
+# Test Strategy:
+Test with various alpha and gamma values. Compare against standard cross-entropy loss to verify behavior. Test with balanced and imbalanced datasets to confirm that it properly down-weights easy examples. Verify gradients flow correctly through the loss function.
+
+# Subtasks:
+## 1. Implement core Focal Loss function for binary classification [pending]
+### Dependencies: None
+### Description: Create the basic focal loss function that works for binary classification tasks, implementing the formula FL(pt) = -alpha * (1-pt)^gamma * log(pt).
+### Details:
+Create a function that takes logits and binary targets as input. First convert logits to probabilities using sigmoid, then compute the standard binary cross entropy loss. Apply the focal loss formula by calculating pt (probability of the correct class) and applying the alpha and gamma parameters. Include parameter validation and proper handling of numerical stability issues. Implement the different reduction modes (mean, sum, none).
+
+## 2. Extend Focal Loss to support multi-class classification [pending]
+### Dependencies: 6.1
+### Description: Extend the focal loss implementation to handle multi-class classification scenarios with class indices or one-hot encoded targets.
+### Details:
+Modify the focal loss function to handle multi-class inputs by detecting input shapes. For class indices, convert to one-hot representations. Use softmax instead of sigmoid for multi-class probabilities. Ensure the alpha parameter can be either a scalar (same for all classes) or a vector (different weight per class). Maintain the same interface as the binary version for consistency.
+
+## 3. Implement gradient computation compatibility [pending]
+### Dependencies: 6.2
+### Description: Ensure the focal loss implementation is fully compatible with MLX's autograd system for proper gradient flow during training.
+### Details:
+Review the implementation to ensure all operations use MLX's array operations that support automatic differentiation. Avoid in-place operations that might break the computation graph. Test gradient flow by computing gradients with respect to the predictions and verifying they have the expected shape and values. Ensure numerical stability by adding small epsilon values where needed to prevent log(0) and division by zero.
+
+## 4. Create FocalLoss class for mlx.nn.losses module [pending]
+### Dependencies: 6.3
+### Description: Implement a class-based version of focal loss that follows the pattern of other loss functions in mlx.nn.losses.
+### Details:
+Create a FocalLoss class that inherits from a base loss class if available, or implements the necessary interface. The class should have an __init__ method that accepts alpha and gamma parameters, and a __call__ method that computes the loss. Include proper documentation with examples. Ensure the class implementation maintains all the functionality of the function-based version while following MLX's class patterns.
+
+## 5. Add comprehensive documentation and examples [pending]
+### Dependencies: 6.4
+### Description: Create detailed documentation and usage examples for the focal loss implementation to help users understand when and how to use it.
+### Details:
+Write docstrings that explain the purpose of focal loss, its mathematical formulation, and when it's most useful (class imbalance scenarios). Include parameter descriptions with default values and their effects. Create usage examples for both binary and multi-class classification scenarios. Add references to the original paper. Include examples showing how focal loss compares to standard cross entropy with imbalanced datasets.
+

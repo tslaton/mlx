@@ -1,0 +1,70 @@
+# Task ID: 9
+# Title: Create mlx.utils.summary module
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Set up the structure for the new mlx.utils.summary module that will house model visualization and summary tools.
+# Details:
+Create a new directory structure for the mlx.utils.summary module. This should include:
+1. Creating the module directory and __init__.py file
+2. Setting up proper imports and exports
+3. Defining the module's public API
+4. Adding documentation stubs
+5. Ensuring the module is properly exposed under the main mlx namespace
+
+The module structure should follow MLX's existing conventions and be consistent with the project's architecture.
+
+# Test Strategy:
+Verify that the module can be imported correctly with `import mlx.utils.summary`. Ensure that the module structure passes all linting checks and follows project conventions.
+
+# Subtasks:
+## 1. Create directory structure and __init__.py file [pending]
+### Dependencies: None
+### Description: Create the necessary directory structure for the mlx.utils.summary module and set up the initial __init__.py file.
+### Details:
+1. Create the directory path mlx/utils/summary/ if it doesn't exist
+2. Create an empty __init__.py file in the summary directory
+3. Add a module docstring at the top of __init__.py explaining the purpose of the module (model visualization and summary tools)
+4. Add version information (__version__ = '0.1.0') to track module versioning
+5. Ensure proper file permissions are set
+
+## 2. Define public API and imports/exports [pending]
+### Dependencies: 9.1
+### Description: Define the public API for the summary module and set up the appropriate imports and exports in the __init__.py file.
+### Details:
+1. Define a list of public functions/classes that will be exposed (e.g., `__all__ = ['model_summary', 'parameter_count']`)
+2. Add placeholder import statements for future implementations (commented out until implemented)
+3. Set up any necessary imports from other MLX modules
+4. Ensure that imports use relative imports where appropriate
+5. Add type hints for all public functions/classes
+
+## 3. Implement module registration in parent packages [pending]
+### Dependencies: 9.2
+### Description: Update the parent module (__init__.py files in mlx and mlx.utils) to properly expose the new summary module.
+### Details:
+1. Update mlx/utils/__init__.py to import and expose the summary module
+2. Ensure the summary module is included in the utils module's __all__ list
+3. Verify that the module can be accessed via both `mlx.utils.summary` and directly imported with `from mlx.utils import summary`
+4. Add any necessary cross-module dependencies
+5. Ensure backward compatibility is maintained if modifying existing files
+
+## 4. Add documentation stubs and docstrings [pending]
+### Dependencies: 9.2
+### Description: Create comprehensive documentation stubs and docstrings for the module and its planned functionality.
+### Details:
+1. Add detailed module-level docstring explaining the purpose and usage of the summary module
+2. Create function/class docstring stubs for all planned public API elements
+3. Follow MLX's documentation style conventions (NumPy or Google style)
+4. Include parameter descriptions, return types, and usage examples in docstrings
+5. Add references to related modules or external resources where appropriate
+
+## 5. Create basic test file for the module [pending]
+### Dependencies: 9.3
+### Description: Implement a basic test file to verify the module structure and imports are working correctly.
+### Details:
+1. Create a test file at tests/test_utils_summary.py
+2. Implement basic import tests to verify the module can be imported
+3. Add placeholder tests for planned functionality (marked as skipped until implemented)
+4. Set up any necessary test fixtures
+5. Ensure tests follow the project's testing conventions and can be discovered by the test runner
+

@@ -1,0 +1,64 @@
+# Task ID: 2
+# Title: Implement Dataset base class
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Create the foundational Dataset class that will standardize data handling across the framework.
+# Details:
+Implement a base Dataset class that:
+1. Provides a standard interface for accessing data samples
+2. Includes methods like __len__, __getitem__
+3. Supports indexing and slicing operations
+4. Includes documentation and usage examples
+
+Code structure should look like:
+```python
+class Dataset:
+    def __init__(self):
+        pass
+        
+    def __len__(self):
+        """Return the number of samples in the dataset"""
+        raise NotImplementedError
+        
+    def __getitem__(self, idx):
+        """Return the sample at the given index"""
+        raise NotImplementedError
+```
+
+The API should be familiar to users of PyTorch's Dataset class while maintaining MLX's design philosophy.
+
+# Test Strategy:
+Create unit tests that verify the Dataset class can be extended properly. Test that abstract methods raise NotImplementedError when not implemented. Create a simple concrete implementation to verify basic functionality.
+
+# Subtasks:
+## 1. Implement Dataset class structure with abstract methods [pending]
+### Dependencies: None
+### Description: Create the base Dataset class with abstract methods that define the standard interface. This includes implementing the class structure, docstrings, and raising NotImplementedError for methods that should be overridden by subclasses.
+### Details:
+Create the Dataset class with proper documentation. Implement __init__ method with appropriate initialization. Define abstract methods __len__ and __getitem__ that raise NotImplementedError with helpful error messages. Include comprehensive docstrings explaining the purpose of each method and expected behavior when subclassed.
+
+## 2. Implement indexing and slicing operations [pending]
+### Dependencies: 2.1
+### Description: Add support for advanced indexing and slicing operations to the Dataset class, allowing users to access subsets of data efficiently.
+### Details:
+Implement __getitem__ to handle various index types: integers for single items, slices for ranges, and potentially lists/arrays for arbitrary indexing. Create a Subset class that references the original dataset but only accesses a subset of indices. Ensure proper error handling for index out of bounds and invalid index types.
+
+## 3. Add utility methods for dataset transformation [pending]
+### Dependencies: 2.1
+### Description: Implement utility methods that allow for dataset transformation, such as mapping functions over the dataset or filtering items.
+### Details:
+Add methods like `map(transform_fn)` that returns a new dataset where each item is transformed by the provided function. Implement `filter(filter_fn)` that returns a dataset containing only items that satisfy the filter function. These methods should return new dataset objects rather than modifying the original.
+
+## 4. Implement dataset composition methods [pending]
+### Dependencies: 2.1
+### Description: Add methods to combine or concatenate datasets, allowing users to create composite datasets from multiple sources.
+### Details:
+Implement a ConcatDataset class that takes multiple datasets and presents them as a single dataset. Add a static method or constructor to Dataset that creates a concatenated dataset. Ensure proper length calculation and index mapping between the concatenated dataset and its components.
+
+## 5. Create comprehensive documentation and usage examples [pending]
+### Dependencies: 2.1, 2.2, 2.3, 2.4
+### Description: Develop detailed documentation with usage examples to demonstrate how to extend and use the Dataset class effectively.
+### Details:
+Write comprehensive docstrings for all classes and methods. Create a separate documentation file with examples showing: 1) How to create a custom dataset by subclassing Dataset, 2) How to use indexing and slicing, 3) How to transform datasets, 4) How to combine datasets. Include best practices and performance considerations. Add type hints to all methods for better IDE support.
+

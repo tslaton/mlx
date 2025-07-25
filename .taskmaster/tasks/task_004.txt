@@ -1,0 +1,70 @@
+# Task ID: 4
+# Title: Create mlx.metrics module structure
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Set up the foundational structure for the new mlx.metrics module that will house evaluation functions.
+# Details:
+Create a new directory structure for the mlx.metrics module. This should include:
+1. Creating the module directory and __init__.py file
+2. Setting up proper imports and exports
+3. Defining the module's public API
+4. Adding documentation stubs
+5. Ensuring the module is properly exposed under the main mlx namespace
+
+The module structure should follow MLX's existing conventions and be consistent with the project's architecture.
+
+# Test Strategy:
+Verify that the module can be imported correctly with `import mlx.metrics`. Ensure that the module structure passes all linting checks and follows project conventions.
+
+# Subtasks:
+## 1. Create mlx.metrics directory and __init__.py file [pending]
+### Dependencies: None
+### Description: Create the basic directory structure for the mlx.metrics module and implement the __init__.py file with proper docstrings and version information.
+### Details:
+1. Create a new directory named 'metrics' within the mlx package directory
+2. Create an __init__.py file in the metrics directory
+3. Add module-level docstring explaining the purpose of the metrics module
+4. Include version information (__version__) consistent with MLX's versioning scheme
+5. Set up __all__ list to control what gets exported when using 'from mlx.metrics import *'
+
+## 2. Define metrics module public API [pending]
+### Dependencies: 4.1
+### Description: Define the public API for the metrics module by planning the functions and classes that will be exposed to users.
+### Details:
+1. Identify common evaluation metrics needed for machine learning (accuracy, precision, recall, F1, etc.)
+2. Create placeholder function signatures with proper type hints in the __init__.py file
+3. Organize metrics into logical categories (classification, regression, etc.)
+4. Ensure naming conventions are consistent with the rest of MLX
+5. Update the __all__ list to include all planned public functions and classes
+
+## 3. Implement module documentation stubs [pending]
+### Dependencies: 4.2
+### Description: Create comprehensive documentation stubs for all planned metrics functions and classes.
+### Details:
+1. Write detailed docstrings for each planned function following NumPy/SciPy docstring format
+2. Include parameter descriptions, return value details, and examples in each docstring
+3. Add usage examples that demonstrate how to use each metric
+4. Document any mathematical formulas or algorithms used in the metrics
+5. Add references to relevant papers or resources where applicable
+
+## 4. Set up imports and exports in parent modules [pending]
+### Dependencies: 4.1
+### Description: Update the parent module's __init__.py files to properly expose the metrics module in the MLX namespace.
+### Details:
+1. Update the main mlx/__init__.py file to import and expose the metrics module
+2. Add 'metrics' to the __all__ list in the main mlx/__init__.py file
+3. Ensure proper relative imports are used throughout
+4. Verify that circular imports are avoided
+5. Test that the module can be imported using 'import mlx.metrics'
+
+## 5. Create package structure for metric categories [pending]
+### Dependencies: 4.2
+### Description: Set up subdirectories within the metrics module to organize metrics by category and prepare for future implementation.
+### Details:
+1. Create subdirectories for different metric categories (classification, regression, etc.)
+2. Add __init__.py files to each subdirectory with appropriate imports and exports
+3. Create placeholder files for each metric category with function stubs
+4. Ensure the main metrics/__init__.py imports from these subdirectories
+5. Update documentation to reflect the organizational structure
+

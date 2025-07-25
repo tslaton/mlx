@@ -1,0 +1,95 @@
+# Task ID: 14
+# Title: Create example notebooks for data loading and training
+# Status: pending
+# Dependencies: 3, 5, 8
+# Priority: low
+# Description: Develop comprehensive example notebooks that demonstrate the end-to-end workflow using the new data loading and training utilities.
+# Details:
+Create Jupyter notebooks that showcase:
+1. How to create custom Dataset implementations
+2. How to use DataLoader for batching and iteration
+3. How to integrate the progress bar into training loops
+4. How to use metrics for evaluation
+5. Complete training examples with common datasets (e.g., MNIST)
+
+The notebooks should be well-documented with explanatory text and comments. They should follow best practices and demonstrate the most efficient usage patterns. Include examples of both classification and regression tasks if possible.
+
+# Test Strategy:
+Execute the notebooks end-to-end to verify they run without errors. Test with different runtime environments (local, cloud) to ensure portability. Have team members review for clarity and correctness. Ensure the examples demonstrate real-world usage patterns.
+
+# Subtasks:
+## 1. Create custom Dataset implementation notebook [pending]
+### Dependencies: None
+### Description: Develop a Jupyter notebook that demonstrates how to create and use custom Dataset implementations in MLX. This notebook will serve as a foundational example for data handling.
+### Details:
+Create a notebook named 'custom_dataset_implementation.ipynb' that includes:
+1. Introduction to the Dataset concept in MLX
+2. Implementation of a simple custom Dataset class for a toy dataset
+3. Implementation of a more complex Dataset for a real-world use case (e.g., image classification)
+4. Examples of dataset transformations and preprocessing
+5. Best practices and common pitfalls
+6. Performance considerations
+
+Ensure the notebook has clear markdown explanations, commented code, and runs end-to-end without errors.
+
+## 2. Create DataLoader and batching notebook [pending]
+### Dependencies: 14.1
+### Description: Develop a Jupyter notebook that demonstrates how to use DataLoader for efficient data batching and iteration in training loops.
+### Details:
+Create a notebook named 'dataloader_batching.ipynb' that includes:
+1. Introduction to the DataLoader concept
+2. Examples of creating DataLoader instances with different configurations
+3. Demonstration of batching strategies (sequential, shuffled)
+4. Implementation of custom collate functions
+5. Examples of multi-processing data loading
+6. Performance optimization techniques
+7. Integration with custom Dataset implementations from the previous notebook
+
+Include visualizations of batched data where appropriate and ensure all examples are runnable.
+
+## 3. Create training loop with progress bar notebook [pending]
+### Dependencies: 14.2
+### Description: Develop a Jupyter notebook that demonstrates how to implement effective training loops with progress bars for model training visualization.
+### Details:
+Create a notebook named 'training_loop_progress.ipynb' that includes:
+1. Basic training loop structure in MLX
+2. Integration of the progress bar from mlx.utils.training
+3. Examples of different progress bar configurations
+4. Handling of training phases (train/validation)
+5. Displaying metrics during training
+6. Early stopping implementation
+7. Checkpoint saving with progress updates
+
+Ensure the notebook demonstrates both console and notebook-friendly progress visualization options.
+
+## 4. Create metrics and evaluation notebook [pending]
+### Dependencies: 14.3
+### Description: Develop a Jupyter notebook that demonstrates how to use metrics for model evaluation and performance tracking during and after training.
+### Details:
+Create a notebook named 'metrics_evaluation.ipynb' that includes:
+1. Overview of available metrics in mlx.metrics
+2. Implementation of common evaluation metrics (accuracy, precision, recall, F1)
+3. Custom metric implementation
+4. Tracking metrics during training
+5. Visualization of metric trends
+6. Model comparison using metrics
+7. Evaluation on test datasets
+
+Include examples for both classification and regression tasks with appropriate metrics for each.
+
+## 5. Create end-to-end MNIST training example notebook [pending]
+### Dependencies: 14.1, 14.2, 14.3, 14.4
+### Description: Develop a comprehensive Jupyter notebook that combines all previous concepts into a complete end-to-end training example using the MNIST dataset.
+### Details:
+Create a notebook named 'mnist_end_to_end.ipynb' that includes:
+1. Loading and preprocessing the MNIST dataset
+2. Creating custom Dataset and DataLoader implementations
+3. Defining a simple neural network model
+4. Implementing a complete training loop with progress bar
+5. Evaluating model performance with metrics
+6. Visualizing training progress and results
+7. Model saving and loading
+8. Inference examples with trained model
+
+Ensure the notebook is extensively documented with explanations of each step and follows best practices for MLX usage.
+

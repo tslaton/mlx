@@ -1,0 +1,287 @@
+# Task ID: 10
+# Title: Implement model summary utility
+# Status: pending
+# Dependencies: 9
+# Priority: medium
+# Description: Create a utility to print a concise, text-based overview of a model's architecture, including layers, output shapes, and parameter counts.
+# Details:
+Implement a model summary utility that:
+1. Takes a model instance as input
+2. Analyzes the model's structure, layers, and parameters
+3. Generates a formatted text table showing:
+   - Layer names and types
+   - Output shapes
+   - Parameter counts per layer
+   - Total parameter count
+4. Handles nested modules and complex architectures
+
+Example implementation:
+```python
+def summary(model, input_shape=None, input_data=None):
+    """Generate a text summary of a model.
+    
+    Args:
+        model: An MLX model instance
+        input_shape: Optional shape to infer output dimensions
+        input_data: Optional input data to trace through the model
+        
+    Returns:
+        A formatted string containing the model summary
+    """
+    if input_data is None and input_shape is not None:
+        # Create dummy input based on shape
+        input_data = mx.zeros(input_shape)
+        
+    # Analyze model structure
+    layers = _extract_layers(model)
+    
+    # Calculate shapes and parameters
+    layer_info = []
+    for name, layer in layers:
+        # Calculate output shape and parameters
+        params = sum(p.size for p in layer.parameters().values())
+        layer_info.append({
+            'name': name,
+            'type': layer.__class__.__name__,
+            'params': params,
+            'shape': _infer_output_shape(layer, input_data)
+        })
+        
+    # Format as table
+    return _format_summary_table(layer_info)
+```
+
+# Test Strategy:
+Test with various model architectures, including sequential models, models with branches, and custom models. Verify that parameter counts match expected values. Test with and without input shape/data. Ensure the output is correctly formatted and readable.
+
+# Subtasks:
+## 1. Implement layer extraction function [pending]
+### Dependencies: None
+### Description: Create a function to recursively extract all layers from a model, handling nested modules and complex architectures.
+### Details:
+Implement the `_extract_layers` function that traverses the model structure to identify all layers. The function should:
+1. Take a model instance as input
+2. Recursively explore the model's structure to find all layers
+3. Handle nested modules by flattening the hierarchy
+4. Return a list of tuples containing (layer_name, layer_instance)
+5. Maintain proper naming for nested layers (e.g., 'block1.conv1')
+
+Example implementation:
+```python
+def _extract_layers(model, prefix=''):
+    layers = []
+    for name, module in model.named_modules():
+        full_name = f"{prefix}.{name}" if prefix else name
+        # Check if this is a leaf module (has no children modules)
+        if not list(module.modules()):
+            layers.append((full_name, module))
+    return layers
+```
+
+## 2. Implement output shape inference function [pending]
+### Dependencies: None
+### Description: Create a function to infer the output shape of each layer given input data or shape.
+### Details:
+Implement the `_infer_output_shape` function that determines the output shape of a layer. The function should:
+1. Take a layer instance and input data as parameters
+2. Forward the input through the layer to get the output
+3. Extract the shape information from the output
+4. Handle exceptions gracefully
+5. Return the output shape as a tuple or 'Unknown' if it cannot be determined
+
+Example implementation:
+```python
+def _infer_output_shape(layer, input_data):
+    try:
+        # Try to forward the input through the layer
+        if input_data is not None:
+            output = layer(input_data)
+            return tuple(output.shape)
+        return "Unknown"
+    except Exception:
+        return "Unknown"
+```
+
+## 3. Implement summary table formatting function [pending]
+### Dependencies: None
+### Description: Create a function to format layer information into a readable text table.
+### Details:
+Implement the `_format_summary_table` function that formats the collected layer information into a readable text table. The function should:
+1. Take a list of layer information dictionaries as input
+2. Calculate column widths based on content
+3. Create a header row with column names
+4. Format each layer's information as a row in the table
+5. Add a summary row with total parameter count
+6. Return the formatted table as a string
+
+Example implementation:
+```python
+def _format_summary_table(layer_info):
+    # Define column headers and widths
+    headers = ["Layer (type)", "Output Shape", "Param #"]
+    col_widths = [max(len(headers[0]), max(len(f"{l['name']} ({l['type']})") for l in layer_info)),
+                 max(len(headers[1]), max(len(str(l['shape'])) for l in layer_info)),
+                 max(len(headers[2]), max(len(f"{l['params']:,}") for l in layer_info))]
+    
+    # Create header row
+    header = "|" + "|".join(h.ljust(w) for h, w in zip(headers, col_widths)) + "|"
+    separator = "|" + "|".join("-" * w for w in col_widths) + "|"
+    
+    # Create rows for each layer
+    rows = []
+    total_params = 0
+    for layer in layer_info:
+        total_params += layer['params']
+        row = f"|{layer['name']} ({layer['type']})".\
+              ljust(col_widths[0]) + "|" + \
+              f"{layer['shape']}".\
+              ljust(col_widths[1]) + "|" + \
+              f"{layer['params']:,}".\
+              ljust(col_widths[2]) + "|"
+        rows.append(row)
+    
+    # Add total parameters row
+    total_row = f"|Total params:".\
+                ljust(col_widths[0] + col_widths[1] + 1) + "|" + \
+                f"{total_params:,}".\
+                ljust(col_widths[2]) + "|"
+    
+    # Combine all parts
+    table = "\n".join([header, separator] + rows + [separator, total_row])
+    return table
+```
+
+## 4. Implement main summary function [pending]
+### Dependencies: 10.1, 10.2, 10.3
+### Description: Create the main summary function that integrates the helper functions and provides the complete model summary.
+### Details:
+Implement the main `summary` function that integrates the helper functions to generate a complete model summary. The function should:
+1. Take a model instance, optional input shape, and optional input data as parameters
+2. Create dummy input data if only input shape is provided
+3. Call _extract_layers to get all layers in the model
+4. For each layer, calculate output shape and parameter count
+5. Format the information using _format_summary_table
+6. Return the formatted summary as a string
+
+Example implementation:
+```python
+def summary(model, input_shape=None, input_data=None):
+    """Generate a text summary of a model.
+    
+    Args:
+        model: An MLX model instance
+        input_shape: Optional shape to infer output dimensions
+        input_data: Optional input data to trace through the model
+        
+    Returns:
+        A formatted string containing the model summary
+    """
+    if input_data is None and input_shape is not None:
+        # Create dummy input based on shape
+        input_data = mx.zeros(input_shape)
+    
+    # Analyze model structure
+    layers = _extract_layers(model)
+    
+    # Calculate shapes and parameters
+    layer_info = []
+    for name, layer in layers:
+        # Calculate output shape and parameters
+        params = sum(p.size for p in layer.parameters().values())
+        layer_info.append({
+            'name': name,
+            'type': layer.__class__.__name__,
+            'params': params,
+            'shape': _infer_output_shape(layer, input_data)
+        })
+    
+    # Format as table
+    return _format_summary_table(layer_info)
+```
+
+## 5. Add documentation and examples [pending]
+### Dependencies: 10.4
+### Description: Add comprehensive documentation and usage examples for the model summary utility.
+### Details:
+Create comprehensive documentation and usage examples for the model summary utility. This should include:
+1. Detailed docstrings for all functions
+2. Type hints for function parameters and return values
+3. Usage examples showing how to use the summary function with different model types
+4. Explanation of the output format
+5. Notes on limitations and edge cases
+
+Example implementation:
+```python
+def summary(model, input_shape=None, input_data=None):
+    """Generate a text summary of a model's architecture.
+    
+    This function analyzes a model's structure and generates a formatted text table
+    showing layer names, types, output shapes, and parameter counts.
+    
+    Args:
+        model: An MLX model instance to summarize
+        input_shape: Optional tuple specifying input shape to infer output dimensions
+                    (e.g., (batch_size, channels, height, width) for images)
+        input_data: Optional input tensor to trace through the model
+                   (overrides input_shape if both are provided)
+        
+    Returns:
+        str: A formatted string containing the model summary table
+        
+    Examples:
+        >>> model = nn.Sequential([nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 1)])
+        >>> print(summary(model, input_shape=(1, 10)))
+        
+        | Layer (type)     | Output Shape | Param # |
+        |------------------|--------------|--------|
+        | 0 (Linear)       | (1, 20)      | 220    |
+        | 1 (ReLU)         | (1, 20)      | 0      |
+        | 2 (Linear)       | (1, 1)       | 21     |
+        |------------------|--------------|--------|
+        | Total params:                   | 241    |
+        
+    Notes:
+        - If neither input_shape nor input_data is provided, output shapes
+          will be shown as "Unknown"
+        - For complex models with dynamic computation paths, the summary
+          may not capture all possible execution paths
+    """
+    # Implementation as before
+```
+
+Also include a separate examples file or section showing usage with different model types:
+
+```python
+# Example usage with different model types
+import mlx.core as mx
+import mlx.nn as nn
+from mlx.utils import summary
+
+# Example 1: Sequential model
+model1 = nn.Sequential([nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 1)])
+print(summary(model1, input_shape=(1, 10)))
+
+# Example 2: Custom model with nested structure
+class MyModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.feature_extractor = nn.Sequential([
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2)
+        ])
+        self.classifier = nn.Sequential([
+            nn.Linear(16*14*14, 128),
+            nn.ReLU(),
+            nn.Linear(128, 10)
+        ])
+    
+    def __call__(self, x):
+        x = self.feature_extractor(x)
+        x = x.reshape(x.shape[0], -1)
+        return self.classifier(x)
+
+model2 = MyModel()
+print(summary(model2, input_shape=(1, 3, 28, 28)))
+```
+

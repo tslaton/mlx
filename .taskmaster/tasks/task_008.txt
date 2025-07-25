@@ -1,0 +1,374 @@
+# Task ID: 8
+# Title: Implement training progress bar
+# Status: pending
+# Dependencies: 7, 3
+# Priority: medium
+# Description: Create a visual progress bar utility that integrates with training loops to display progress, metrics, and timing information.
+# Details:
+Implement a progress bar utility that:
+1. Wraps iterables (especially DataLoader instances)
+2. Displays a visual progress indicator in the terminal
+3. Shows current epoch, iteration, and time elapsed
+4. Supports dynamic updating of metrics during training
+5. Has customizable formatting options
+
+Example implementation:
+```python
+class ProgressBar:
+    def __init__(self, iterable, total=None, desc='', metrics=None):
+        self.iterable = iterable
+        self.total = total or len(iterable)
+        self.desc = desc
+        self.metrics = metrics or {}
+        self.start_time = time.time()
+        
+    def __iter__(self):
+        for obj in self.iterable:
+            yield obj
+            self._update_progress()
+            
+    def _update_progress(self):
+        # Update and display progress bar
+        pass
+        
+    def update_metrics(self, **metrics):
+        """Update displayed metrics during iteration"""
+        self.metrics.update(metrics)
+```
+
+The implementation should be efficient and not significantly impact training performance.
+
+# Test Strategy:
+Test with various iterables including DataLoader instances. Verify that progress is displayed correctly and updates at the expected rate. Test with long-running iterations to ensure the display remains responsive. Test with various terminal sizes and configurations.
+
+# Subtasks:
+## 1. Implement ProgressBar class initialization and iteration [pending]
+### Dependencies: None
+### Description: Create the basic structure of the ProgressBar class with initialization and iteration functionality that wraps iterables.
+### Details:
+Implement the ProgressBar class with the following components:
+1. Constructor that accepts an iterable, optional total length, description, and initial metrics dictionary
+2. Store start time when initialized
+3. Implement __iter__ method that yields items from the wrapped iterable
+4. Add basic structure for progress tracking
+
+```python
+import time
+
+class ProgressBar:
+    def __init__(self, iterable, total=None, desc='', metrics=None):
+        self.iterable = iterable
+        self.total = total or len(iterable)
+        self.desc = desc
+        self.metrics = metrics or {}
+        self.start_time = time.time()
+        self.current = 0
+        
+    def __iter__(self):
+        self.current = 0
+        self.start_time = time.time()
+        for obj in self.iterable:
+            yield obj
+            self.current += 1
+            self._update_progress()
+```
+
+## 2. Implement progress bar display functionality [pending]
+### Dependencies: 8.1
+### Description: Create the core display functionality that shows a visual progress bar in the terminal with current progress percentage.
+### Details:
+Implement the _update_progress method to display a visual progress bar in the terminal:
+1. Calculate progress percentage
+2. Create a visual bar representation using characters (e.g., █ for completed, ░ for remaining)
+3. Display the bar with percentage
+4. Handle terminal width constraints
+5. Use carriage return (\r) to update in-place
+
+```python
+import sys
+
+def _update_progress(self):
+    progress = self.current / self.total
+    bar_length = 30  # Adjust based on terminal width
+    filled_length = int(bar_length * progress)
+    
+    bar = '█' * filled_length + '░' * (bar_length - filled_length)
+    percentage = progress * 100
+    
+    # Basic progress display
+    output = f'\r{self.desc} |{bar}| {percentage:.1f}%'
+    
+    sys.stdout.write(output)
+    sys.stdout.flush()
+    
+    # Add newline when complete
+    if self.current >= self.total:
+        sys.stdout.write('\n')
+        sys.stdout.flush()
+```
+
+## 3. Add timing information display [pending]
+### Dependencies: 8.2
+### Description: Enhance the progress bar to show elapsed time and estimated time remaining.
+### Details:
+Extend the _update_progress method to calculate and display timing information:
+1. Calculate elapsed time since start
+2. Estimate time remaining based on current progress
+3. Format time values in a human-readable format (e.g., HH:MM:SS)
+4. Add timing information to the progress display
+
+```python
+def _format_time(self, seconds):
+    """Convert seconds to HH:MM:SS format"""
+    h = int(seconds // 3600)
+    m = int((seconds % 3600) // 60)
+    s = int(seconds % 60)
+    return f"{h:02d}:{m:02d}:{s:02d}"
+
+def _update_progress(self):
+    progress = self.current / self.total
+    bar_length = 30
+    filled_length = int(bar_length * progress)
+    
+    bar = '█' * filled_length + '░' * (bar_length - filled_length)
+    percentage = progress * 100
+    
+    # Calculate timing information
+    elapsed = time.time() - self.start_time
+    elapsed_str = self._format_time(elapsed)
+    
+    if progress > 0:
+        eta = elapsed / progress - elapsed
+        eta_str = self._format_time(eta)
+    else:
+        eta_str = "--:--:--"
+    
+    # Enhanced progress display with timing
+    output = f'\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]'
+    
+    sys.stdout.write(output)
+    sys.stdout.flush()
+    
+    if self.current >= self.total:
+        sys.stdout.write('\n')
+        sys.stdout.flush()
+```
+
+## 4. Implement metrics display and updating [pending]
+### Dependencies: 8.3
+### Description: Add functionality to display and dynamically update training metrics during iteration.
+### Details:
+Implement metrics display and updating functionality:
+1. Create an update_metrics method to add or update metrics during iteration
+2. Format metrics for display (name: value)
+3. Integrate metrics display into the progress bar output
+
+```python
+def update_metrics(self, **metrics):
+    """Update displayed metrics during iteration"""
+    self.metrics.update(metrics)
+    self._update_progress()  # Refresh display with new metrics
+
+def _format_metrics(self):
+    """Format metrics dictionary for display"""
+    if not self.metrics:
+        return ""
+    
+    # Format each metric as "name: value" with proper formatting for different types
+    formatted = []
+    for name, value in self.metrics.items():
+        if isinstance(value, float):
+            formatted.append(f"{name}: {value:.4f}")
+        else:
+            formatted.append(f"{name}: {value}")
+    
+    return " | " + " | ".join(formatted)
+
+def _update_progress(self):
+    progress = self.current / self.total
+    bar_length = 30
+    filled_length = int(bar_length * progress)
+    
+    bar = '█' * filled_length + '░' * (bar_length - filled_length)
+    percentage = progress * 100
+    
+    # Calculate timing information
+    elapsed = time.time() - self.start_time
+    elapsed_str = self._format_time(elapsed)
+    
+    if progress > 0:
+        eta = elapsed / progress - elapsed
+        eta_str = self._format_time(eta)
+    else:
+        eta_str = "--:--:--"
+    
+    # Format metrics
+    metrics_str = self._format_metrics()
+    
+    # Complete progress display with metrics
+    output = f'\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]{metrics_str}'
+    
+    sys.stdout.write(output)
+    sys.stdout.flush()
+    
+    if self.current >= self.total:
+        sys.stdout.write('\n')
+        sys.stdout.flush()
+```
+
+## 5. Add customization options and performance optimization [pending]
+### Dependencies: 8.4
+### Description: Implement customization options for the progress bar appearance and optimize performance to minimize impact on training loops.
+### Details:
+Add customization options and performance optimizations:
+1. Add parameters to customize bar appearance (bar characters, width, etc.)
+2. Add option to control update frequency to reduce terminal I/O
+3. Implement terminal width detection for responsive display
+4. Add context manager support for non-iterable use cases
+5. Optimize performance to minimize impact on training loops
+
+```python
+import time
+import sys
+import shutil
+
+class ProgressBar:
+    def __init__(self, iterable=None, total=None, desc='', metrics=None, 
+                 bar_width=30, fill_char='█', empty_char='░', 
+                 update_freq=1):
+        self.iterable = iterable
+        self.total = total
+        if iterable is not None and total is None:
+            try:
+                self.total = len(iterable)
+            except (TypeError, AttributeError):
+                self.total = None
+        
+        self.desc = desc
+        self.metrics = metrics or {}
+        self.start_time = time.time()
+        self.current = 0
+        
+        # Customization options
+        self.bar_width = bar_width
+        self.fill_char = fill_char
+        self.empty_char = empty_char
+        self.update_freq = update_freq
+        self.last_update_time = 0
+    
+    def __iter__(self):
+        self.current = 0
+        self.start_time = time.time()
+        self.last_update_time = 0
+        
+        for obj in self.iterable:
+            yield obj
+            self.current += 1
+            
+            # Only update display based on frequency to reduce I/O overhead
+            current_time = time.time()
+            if (current_time - self.last_update_time >= self.update_freq) or (self.current >= self.total):
+                self._update_progress()
+                self.last_update_time = current_time
+    
+    def __enter__(self):
+        self.start_time = time.time()
+        self.last_update_time = 0
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.current < self.total:
+            self.current = self.total
+            self._update_progress()
+    
+    def update(self, n=1):
+        """Update progress by n steps (for non-iterable use)"""
+        self.current += n
+        current_time = time.time()
+        if (current_time - self.last_update_time >= self.update_freq) or (self.current >= self.total):
+            self._update_progress()
+            self.last_update_time = current_time
+    
+    def _get_terminal_width(self):
+        """Get current terminal width"""
+        try:
+            return shutil.get_terminal_size().columns
+        except (AttributeError, ImportError):
+            return 80  # Default fallback width
+    
+    def _format_time(self, seconds):
+        """Convert seconds to HH:MM:SS format"""
+        h = int(seconds // 3600)
+        m = int((seconds % 3600) // 60)
+        s = int(seconds % 60)
+        return f"{h:02d}:{m:02d}:{s:02d}"
+    
+    def _format_metrics(self):
+        """Format metrics dictionary for display"""
+        if not self.metrics:
+            return ""
+        
+        formatted = []
+        for name, value in self.metrics.items():
+            if isinstance(value, float):
+                formatted.append(f"{name}: {value:.4f}")
+            else:
+                formatted.append(f"{name}: {value}")
+        
+        return " | " + " | ".join(formatted)
+    
+    def update_metrics(self, **metrics):
+        """Update displayed metrics during iteration"""
+        self.metrics.update(metrics)
+        current_time = time.time()
+        if current_time - self.last_update_time >= self.update_freq:
+            self._update_progress()
+            self.last_update_time = current_time
+    
+    def _update_progress(self):
+        if self.total is None:
+            # Handle case where total is unknown
+            elapsed = time.time() - self.start_time
+            elapsed_str = self._format_time(elapsed)
+            metrics_str = self._format_metrics()
+            output = f'\r{self.desc} {self.current} items [elapsed: {elapsed_str}]{metrics_str}'
+        else:
+            progress = min(1.0, self.current / self.total)
+            
+            # Adjust bar width based on available terminal space
+            terminal_width = self._get_terminal_width()
+            available_width = terminal_width - 50  # Reserve space for text and metrics
+            bar_width = min(self.bar_width, max(10, available_width))
+            
+            filled_length = int(bar_width * progress)
+            bar = self.fill_char * filled_length + self.empty_char * (bar_width - filled_length)
+            percentage = progress * 100
+            
+            # Calculate timing information
+            elapsed = time.time() - self.start_time
+            elapsed_str = self._format_time(elapsed)
+            
+            if progress > 0 and progress < 1:
+                eta = elapsed / progress - elapsed
+                eta_str = self._format_time(eta)
+            else:
+                eta_str = "--:--:--"
+            
+            # Format metrics
+            metrics_str = self._format_metrics()
+            
+            # Complete progress display with metrics
+            output = f'\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]{metrics_str}'
+        
+        # Ensure output doesn't exceed terminal width
+        if len(output) > self._get_terminal_width():
+            output = output[:self._get_terminal_width() - 3] + '...'
+        
+        sys.stdout.write(output)
+        sys.stdout.flush()
+        
+        if self.total is not None and self.current >= self.total:
+            sys.stdout.write('\n')
+            sys.stdout.flush()
+```
+

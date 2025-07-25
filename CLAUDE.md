@@ -103,3 +103,7 @@ When modifying neural network layers:
 - Benchmarks are in `benchmarks/` - run these for performance-sensitive changes
 - Metal kernels are JIT-compiled and cached
 - Use `mlx.core.eval()` to force evaluation in benchmarks
+
+## Task Master AI Instructions
+**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
+@./.taskmaster/CLAUDE.md

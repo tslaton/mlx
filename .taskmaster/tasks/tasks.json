@@ -1,0 +1,1034 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Create mlx.data module structure",
+        "description": "Set up the foundational structure for the new mlx.data module that will house Dataset and DataLoader classes.",
+        "details": "Create a new directory structure for the mlx.data module. This should include:\n1. Creating the module directory and __init__.py file\n2. Setting up proper imports and exports\n3. Defining the module's public API\n4. Adding documentation stubs\n5. Ensuring the module is properly exposed under the main mlx namespace\n\nThe module structure should follow MLX's existing conventions and be consistent with the project's architecture.",
+        "testStrategy": "Verify that the module can be imported correctly with `import mlx.data`. Ensure that the module structure passes all linting checks and follows project conventions.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create mlx.data directory structure",
+            "description": "Set up the basic directory structure for the mlx.data module, ensuring it follows the project's conventions and can be properly recognized as a Python package.",
+            "dependencies": [],
+            "details": "Create a new directory named 'data' within the mlx package directory. Inside this directory, create an empty __init__.py file to mark it as a Python package. Ensure the directory structure is consistent with other MLX modules. The directory should be placed at the same level as other top-level modules in the MLX project.",
+            "status": "pending",
+            "testStrategy": "Verify the directory structure exists and follows project conventions. Check that the directory is properly recognized as a Python package."
+          },
+          {
+            "id": 2,
+            "title": "Define mlx.data module's public API",
+            "description": "Define the public API for the mlx.data module, including the classes and functions that will be exposed to users.",
+            "dependencies": [],
+            "details": "In the __init__.py file, define the __all__ list that specifies which classes and functions will be publicly available when users import the module. Initially, this should include placeholders for 'Dataset' and 'DataLoader' classes that will be implemented later. Add docstrings that describe the purpose of the module and its components. The API should be designed to be intuitive and consistent with other MLX modules.",
+            "status": "pending",
+            "testStrategy": "Verify that the __init__.py file correctly defines the public API. Check that the docstrings are comprehensive and follow the project's documentation style."
+          },
+          {
+            "id": 3,
+            "title": "Set up imports and exports in __init__.py",
+            "description": "Configure the imports and exports in the __init__.py file to ensure the module's components are properly exposed.",
+            "dependencies": [],
+            "details": "Update the __init__.py file to include import statements for the Dataset and DataLoader classes (which will be implemented in separate files later). Set up proper exports so that users can access these classes directly from the mlx.data namespace. Include version information and any necessary metadata for the module. The imports should be structured to avoid circular dependencies and optimize import time.",
+            "status": "pending",
+            "testStrategy": "Test importing the module with `import mlx.data` and verify that no import errors occur. Check that the expected classes are available in the module's namespace."
+          },
+          {
+            "id": 4,
+            "title": "Add documentation stubs for mlx.data module",
+            "description": "Create comprehensive documentation stubs for the mlx.data module, including class and function signatures, parameter descriptions, and usage examples.",
+            "dependencies": [],
+            "details": "Create documentation stubs for the Dataset and DataLoader classes, including detailed descriptions of their purpose, parameters, methods, and usage patterns. Follow MLX's documentation conventions, including proper formatting for parameters, return values, and examples. Include placeholders for code examples that demonstrate how to use the classes. The documentation should be written in a way that will be helpful for both new and experienced users.",
+            "status": "pending",
+            "testStrategy": "Review the documentation stubs for completeness, clarity, and adherence to project conventions. Verify that all public API elements have appropriate documentation."
+          },
+          {
+            "id": 5,
+            "title": "Integrate mlx.data module with main mlx namespace",
+            "description": "Ensure the mlx.data module is properly exposed under the main mlx namespace and can be imported correctly.",
+            "dependencies": [],
+            "details": "Update the main mlx package's __init__.py file to include the new mlx.data module in its imports. Ensure that the module is properly exposed so that users can access it via `import mlx.data`. Test the import path to verify that the module is correctly integrated with the main namespace. Make any necessary adjustments to package setup files (setup.py or pyproject.toml) to include the new module in the package distribution.",
+            "status": "pending",
+            "testStrategy": "Verify that the module can be imported correctly with `import mlx.data`. Test that the module appears in the MLX package documentation. Run linting checks to ensure the module structure follows project conventions."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Dataset base class",
+        "description": "Create the foundational Dataset class that will standardize data handling across the framework.",
+        "details": "Implement a base Dataset class that:\n1. Provides a standard interface for accessing data samples\n2. Includes methods like __len__, __getitem__\n3. Supports indexing and slicing operations\n4. Includes documentation and usage examples\n\nCode structure should look like:\n```python\nclass Dataset:\n    def __init__(self):\n        pass\n        \n    def __len__(self):\n        \"\"\"Return the number of samples in the dataset\"\"\"\n        raise NotImplementedError\n        \n    def __getitem__(self, idx):\n        \"\"\"Return the sample at the given index\"\"\"\n        raise NotImplementedError\n```\n\nThe API should be familiar to users of PyTorch's Dataset class while maintaining MLX's design philosophy.",
+        "testStrategy": "Create unit tests that verify the Dataset class can be extended properly. Test that abstract methods raise NotImplementedError when not implemented. Create a simple concrete implementation to verify basic functionality.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Dataset class structure with abstract methods",
+            "description": "Create the base Dataset class with abstract methods that define the standard interface. This includes implementing the class structure, docstrings, and raising NotImplementedError for methods that should be overridden by subclasses.",
+            "dependencies": [],
+            "details": "Create the Dataset class with proper documentation. Implement __init__ method with appropriate initialization. Define abstract methods __len__ and __getitem__ that raise NotImplementedError with helpful error messages. Include comprehensive docstrings explaining the purpose of each method and expected behavior when subclassed.",
+            "status": "pending",
+            "testStrategy": "Test that instantiating the base class works but calling abstract methods raises NotImplementedError. Verify error messages are helpful and descriptive."
+          },
+          {
+            "id": 2,
+            "title": "Implement indexing and slicing operations",
+            "description": "Add support for advanced indexing and slicing operations to the Dataset class, allowing users to access subsets of data efficiently.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Implement __getitem__ to handle various index types: integers for single items, slices for ranges, and potentially lists/arrays for arbitrary indexing. Create a Subset class that references the original dataset but only accesses a subset of indices. Ensure proper error handling for index out of bounds and invalid index types.",
+            "status": "pending",
+            "testStrategy": "Test with various index types (integers, slices, lists). Verify that slicing returns a valid Subset object. Test edge cases like empty slices and out-of-bounds indices."
+          },
+          {
+            "id": 3,
+            "title": "Add utility methods for dataset transformation",
+            "description": "Implement utility methods that allow for dataset transformation, such as mapping functions over the dataset or filtering items.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Add methods like `map(transform_fn)` that returns a new dataset where each item is transformed by the provided function. Implement `filter(filter_fn)` that returns a dataset containing only items that satisfy the filter function. These methods should return new dataset objects rather than modifying the original.",
+            "status": "pending",
+            "testStrategy": "Test that transform functions are correctly applied to all items. Verify that filtering correctly includes/excludes items based on the filter function. Check that the original dataset remains unchanged."
+          },
+          {
+            "id": 4,
+            "title": "Implement dataset composition methods",
+            "description": "Add methods to combine or concatenate datasets, allowing users to create composite datasets from multiple sources.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Implement a ConcatDataset class that takes multiple datasets and presents them as a single dataset. Add a static method or constructor to Dataset that creates a concatenated dataset. Ensure proper length calculation and index mapping between the concatenated dataset and its components.",
+            "status": "pending",
+            "testStrategy": "Test concatenating datasets of different lengths. Verify that indexing works correctly across dataset boundaries. Test edge cases like concatenating empty datasets or a single dataset."
+          },
+          {
+            "id": 5,
+            "title": "Create comprehensive documentation and usage examples",
+            "description": "Develop detailed documentation with usage examples to demonstrate how to extend and use the Dataset class effectively.",
+            "dependencies": [
+              "2.1",
+              "2.2",
+              "2.3",
+              "2.4"
+            ],
+            "details": "Write comprehensive docstrings for all classes and methods. Create a separate documentation file with examples showing: 1) How to create a custom dataset by subclassing Dataset, 2) How to use indexing and slicing, 3) How to transform datasets, 4) How to combine datasets. Include best practices and performance considerations. Add type hints to all methods for better IDE support.",
+            "status": "pending",
+            "testStrategy": "Review documentation for clarity and completeness. Create example implementations following the documentation to verify accuracy. Have team members review the documentation for usability."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement DataLoader class",
+        "description": "Create the DataLoader class to handle batching, shuffling, and iteration over datasets.",
+        "details": "Implement a DataLoader class that:\n1. Takes a Dataset instance as input\n2. Supports batch creation with configurable batch size\n3. Provides shuffling capabilities\n4. Implements iteration protocol (__iter__, __next__)\n5. Handles the last batch (potentially incomplete)\n\nExample implementation:\n```python\nclass DataLoader:\n    def __init__(self, dataset, batch_size=1, shuffle=False):\n        self.dataset = dataset\n        self.batch_size = batch_size\n        self.shuffle = shuffle\n        self.indices = list(range(len(dataset)))\n        \n    def __iter__(self):\n        if self.shuffle:\n            random.shuffle(self.indices)\n        self.current = 0\n        return self\n        \n    def __next__(self):\n        if self.current >= len(self.indices):\n            raise StopIteration\n            \n        batch_indices = self.indices[self.current:self.current + self.batch_size]\n        batch = [self.dataset[i] for i in batch_indices]\n        self.current += self.batch_size\n        \n        # Convert list of samples to batched tensors\n        return self._collate(batch)\n        \n    def _collate(self, batch):\n        # Implement logic to convert list of samples to batched tensors\n        pass\n```\n\nThe implementation should prioritize performance while maintaining a clean API.",
+        "testStrategy": "Test with various batch sizes, with and without shuffling. Verify that all samples are correctly yielded. Test with edge cases like batch_size=1, batch_size > dataset length, and empty datasets. Benchmark performance with large datasets.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement DataLoader initialization and configuration",
+            "description": "Create the DataLoader class with proper initialization that accepts a dataset instance and configures batch size and shuffling options.",
+            "dependencies": [],
+            "details": "Create the DataLoader class with an __init__ method that takes a dataset, batch_size (default=1), and shuffle (default=False) parameters. Store these as instance variables. Initialize indices as a list of integers from 0 to len(dataset)-1. Add input validation to ensure dataset is a valid Dataset instance, batch_size is a positive integer, and shuffle is a boolean.",
+            "status": "pending",
+            "testStrategy": "Test initialization with various parameter combinations. Verify that the DataLoader correctly stores the dataset, batch_size, and shuffle parameters. Test with invalid inputs (None dataset, negative batch size) to ensure proper error handling."
+          },
+          {
+            "id": 2,
+            "title": "Implement iteration protocol methods",
+            "description": "Add __iter__ and __next__ methods to make the DataLoader iterable, handling shuffling and batch creation.",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "Implement __iter__ method that shuffles indices if self.shuffle is True, resets the current position counter to 0, and returns self. Implement __next__ method that checks if current position exceeds dataset length, raises StopIteration when exhausted, extracts batch_indices from the indices list using current position and batch_size, creates a batch by accessing dataset with these indices, increments current position by batch_size, and returns the collated batch.",
+            "status": "pending",
+            "testStrategy": "Test iteration over the entire dataset with different batch sizes. Verify that StopIteration is raised after all data is consumed. Test with shuffle=True and shuffle=False to ensure different ordering when appropriate."
+          },
+          {
+            "id": 3,
+            "title": "Implement batch collation functionality",
+            "description": "Create the _collate method to convert a list of individual samples into batched tensors.",
+            "dependencies": [
+              "3.2"
+            ],
+            "details": "Implement the _collate method that takes a list of samples and combines them into a batched format. Handle different data types: for numeric data, convert to MLX arrays and stack them; for dict-type samples, create a dict with the same keys but values batched together; for tuple/list samples, batch each position separately. Add type checking and appropriate error messages for unsupported data types.",
+            "status": "pending",
+            "testStrategy": "Test collation with various data types (arrays, dictionaries, tuples). Verify that the output maintains the same structure as inputs but with an added batch dimension. Test with mixed data types and edge cases like empty batches."
+          },
+          {
+            "id": 4,
+            "title": "Handle incomplete last batch",
+            "description": "Modify the DataLoader to properly handle the last batch which may be smaller than the specified batch size.",
+            "dependencies": [
+              "3.2",
+              "3.3"
+            ],
+            "details": "Update the __next__ method to correctly handle the case where the remaining samples are fewer than batch_size. Ensure the last batch is properly created and collated even if incomplete. Add an optional drop_last parameter to the constructor (default=False) that, when True, will drop the last batch if it's incomplete.",
+            "status": "pending",
+            "testStrategy": "Test with datasets whose length is not divisible by batch_size. Verify that all samples are included when drop_last=False. Test with drop_last=True to ensure incomplete batches are skipped. Verify the total number of batches is correct in both cases."
+          },
+          {
+            "id": 5,
+            "title": "Optimize performance and add utility methods",
+            "description": "Optimize the DataLoader for performance and add utility methods for better usability.",
+            "dependencies": [
+              "3.1",
+              "3.2",
+              "3.3",
+              "3.4"
+            ],
+            "details": "Optimize batch creation by using slicing operations where possible instead of list comprehensions. Add a reset() method to reset the iterator state without creating a new DataLoader. Implement a __len__ method that returns the number of batches (accounting for drop_last setting). Add an optional num_workers parameter (for future multi-threading support) that currently just logs a warning that it's not implemented. Document all methods with proper docstrings.",
+            "status": "pending",
+            "testStrategy": "Benchmark performance with large datasets. Compare iteration speed with and without optimizations. Test the reset() method to ensure iteration can be restarted correctly. Verify that __len__ returns the correct number of batches."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Create mlx.metrics module structure",
+        "description": "Set up the foundational structure for the new mlx.metrics module that will house evaluation functions.",
+        "details": "Create a new directory structure for the mlx.metrics module. This should include:\n1. Creating the module directory and __init__.py file\n2. Setting up proper imports and exports\n3. Defining the module's public API\n4. Adding documentation stubs\n5. Ensuring the module is properly exposed under the main mlx namespace\n\nThe module structure should follow MLX's existing conventions and be consistent with the project's architecture.",
+        "testStrategy": "Verify that the module can be imported correctly with `import mlx.metrics`. Ensure that the module structure passes all linting checks and follows project conventions.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create mlx.metrics directory and __init__.py file",
+            "description": "Create the basic directory structure for the mlx.metrics module and implement the __init__.py file with proper docstrings and version information.",
+            "dependencies": [],
+            "details": "1. Create a new directory named 'metrics' within the mlx package directory\n2. Create an __init__.py file in the metrics directory\n3. Add module-level docstring explaining the purpose of the metrics module\n4. Include version information (__version__) consistent with MLX's versioning scheme\n5. Set up __all__ list to control what gets exported when using 'from mlx.metrics import *'",
+            "status": "pending",
+            "testStrategy": "Verify the directory structure exists and the __init__.py file can be properly imported. Check that the module-level docstring is comprehensive and follows project conventions."
+          },
+          {
+            "id": 2,
+            "title": "Define metrics module public API",
+            "description": "Define the public API for the metrics module by planning the functions and classes that will be exposed to users.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "1. Identify common evaluation metrics needed for machine learning (accuracy, precision, recall, F1, etc.)\n2. Create placeholder function signatures with proper type hints in the __init__.py file\n3. Organize metrics into logical categories (classification, regression, etc.)\n4. Ensure naming conventions are consistent with the rest of MLX\n5. Update the __all__ list to include all planned public functions and classes",
+            "status": "pending",
+            "testStrategy": "Review the API design with team members to ensure it covers necessary metrics. Verify that function signatures have appropriate type hints and follow MLX's API design patterns."
+          },
+          {
+            "id": 3,
+            "title": "Implement module documentation stubs",
+            "description": "Create comprehensive documentation stubs for all planned metrics functions and classes.",
+            "dependencies": [
+              "4.2"
+            ],
+            "details": "1. Write detailed docstrings for each planned function following NumPy/SciPy docstring format\n2. Include parameter descriptions, return value details, and examples in each docstring\n3. Add usage examples that demonstrate how to use each metric\n4. Document any mathematical formulas or algorithms used in the metrics\n5. Add references to relevant papers or resources where applicable",
+            "status": "pending",
+            "testStrategy": "Run documentation generation tools to ensure docstrings are properly formatted. Review documentation for clarity, completeness, and adherence to project standards."
+          },
+          {
+            "id": 4,
+            "title": "Set up imports and exports in parent modules",
+            "description": "Update the parent module's __init__.py files to properly expose the metrics module in the MLX namespace.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "1. Update the main mlx/__init__.py file to import and expose the metrics module\n2. Add 'metrics' to the __all__ list in the main mlx/__init__.py file\n3. Ensure proper relative imports are used throughout\n4. Verify that circular imports are avoided\n5. Test that the module can be imported using 'import mlx.metrics'",
+            "status": "pending",
+            "testStrategy": "Test importing the module using different import patterns (import mlx.metrics, from mlx import metrics, etc.) to ensure it's properly exposed. Verify that no import errors occur."
+          },
+          {
+            "id": 5,
+            "title": "Create package structure for metric categories",
+            "description": "Set up subdirectories within the metrics module to organize metrics by category and prepare for future implementation.",
+            "dependencies": [
+              "4.2"
+            ],
+            "details": "1. Create subdirectories for different metric categories (classification, regression, etc.)\n2. Add __init__.py files to each subdirectory with appropriate imports and exports\n3. Create placeholder files for each metric category with function stubs\n4. Ensure the main metrics/__init__.py imports from these subdirectories\n5. Update documentation to reflect the organizational structure",
+            "status": "pending",
+            "testStrategy": "Verify the directory structure follows project conventions. Test importing specific metrics from their categories. Run linting tools to ensure code structure meets project standards."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Implement core classification metrics",
+        "description": "Implement essential classification metrics including accuracy, precision, recall, and F1-score in the mlx.metrics module.",
+        "details": "Create optimized implementations of the following metrics:\n1. Accuracy: proportion of correct predictions\n2. Precision: true positives / (true positives + false positives)\n3. Recall: true positives / (true positives + false negatives)\n4. F1-score: 2 * (precision * recall) / (precision + recall)\n\nEach function should:\n- Accept predictions and ground truth as MLX arrays\n- Support both binary and multi-class scenarios\n- Handle edge cases gracefully\n- Be optimized for MLX's computation model\n\nExample implementation for accuracy:\n```python\ndef accuracy(predictions, targets):\n    \"\"\"Calculate accuracy score.\n    \n    Args:\n        predictions: Model predictions, either probabilities or class indices\n        targets: Ground truth labels\n        \n    Returns:\n        Accuracy score as a scalar value\n    \"\"\"\n    if predictions.ndim > 1 and predictions.shape[1] > 1:\n        # Convert probabilities to class indices\n        predictions = mx.argmax(predictions, axis=1)\n    if targets.ndim > 1 and targets.shape[1] > 1:\n        # Convert one-hot to class indices\n        targets = mx.argmax(targets, axis=1)\n        \n    correct = mx.sum(predictions == targets)\n    total = targets.shape[0]\n    return correct / total\n```",
+        "testStrategy": "Create comprehensive unit tests for each metric with various input shapes and types. Test with binary and multi-class scenarios. Compare results against known values for validation. Test edge cases like perfect predictions, all incorrect predictions, and imbalanced classes.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement accuracy metric function",
+            "description": "Create an optimized implementation of the accuracy metric that calculates the proportion of correct predictions.",
+            "dependencies": [],
+            "details": "Implement the accuracy function that accepts predictions and ground truth as MLX arrays. The function should handle both probability distributions and class indices, supporting both binary and multi-class scenarios. Include proper input validation and edge case handling. Follow the example implementation provided in the task description, ensuring the function is optimized for MLX's computation model.",
+            "status": "pending",
+            "testStrategy": "Test with various input formats: class indices and probability distributions. Test binary and multi-class scenarios. Verify correct handling of edge cases like perfect predictions and all incorrect predictions. Compare results against manually calculated values."
+          },
+          {
+            "id": 2,
+            "title": "Implement precision metric function",
+            "description": "Create an optimized implementation of the precision metric that calculates the ratio of true positives to all predicted positives.",
+            "dependencies": [
+              "5.1"
+            ],
+            "details": "Implement the precision function that calculates true positives / (true positives + false positives). The function should accept predictions and ground truth as MLX arrays, supporting both binary and multi-class classification. For multi-class, implement micro and macro averaging options. Handle edge cases like zero predicted positives gracefully, potentially using a small epsilon value to avoid division by zero. Ensure the implementation is optimized for MLX's computation model.",
+            "status": "pending",
+            "testStrategy": "Test with binary and multi-class inputs. Verify correct calculation with manually computed examples. Test edge cases including perfect precision, zero precision, and imbalanced classes. For multi-class, test both micro and macro averaging approaches."
+          },
+          {
+            "id": 3,
+            "title": "Implement recall metric function",
+            "description": "Create an optimized implementation of the recall metric that calculates the ratio of true positives to all actual positives.",
+            "dependencies": [
+              "5.1"
+            ],
+            "details": "Implement the recall function that calculates true positives / (true positives + false negatives). The function should accept predictions and ground truth as MLX arrays, supporting both binary and multi-class classification. For multi-class, implement micro and macro averaging options. Handle edge cases like zero actual positives gracefully. Ensure the implementation is optimized for MLX's computation model and follows the same interface pattern as the accuracy function.",
+            "status": "pending",
+            "testStrategy": "Test with binary and multi-class inputs. Verify correct calculation with manually computed examples. Test edge cases including perfect recall, zero recall, and imbalanced classes. For multi-class, test both micro and macro averaging approaches."
+          },
+          {
+            "id": 4,
+            "title": "Implement F1-score metric function",
+            "description": "Create an optimized implementation of the F1-score metric that calculates the harmonic mean of precision and recall.",
+            "dependencies": [
+              "5.2",
+              "5.3"
+            ],
+            "details": "Implement the F1-score function that calculates 2 * (precision * recall) / (precision + recall). The function should accept predictions and ground truth as MLX arrays. Provide two implementation approaches: (1) calling the previously implemented precision and recall functions, and (2) a direct calculation for optimization. Support both binary and multi-class classification with micro and macro averaging options. Handle edge cases where precision and recall are both zero. Ensure the implementation is optimized for MLX's computation model.",
+            "status": "pending",
+            "testStrategy": "Test with binary and multi-class inputs. Verify correct calculation with manually computed examples. Test edge cases including perfect F1-score, zero F1-score, and imbalanced classes. Compare results with separately calculated precision and recall to ensure consistency. For multi-class, test both micro and macro averaging approaches."
+          },
+          {
+            "id": 5,
+            "title": "Create comprehensive metrics module interface",
+            "description": "Integrate all implemented classification metrics into a cohesive module with consistent interface and documentation.",
+            "dependencies": [
+              "5.1",
+              "5.2",
+              "5.3",
+              "5.4"
+            ],
+            "details": "Create a unified interface for all classification metrics in the mlx.metrics module. Ensure consistent function signatures, parameter naming, and return types across all metric functions. Implement a metrics factory or helper functions that can compute multiple metrics at once. Add comprehensive docstrings with examples for each function. Create an __init__.py file that properly exposes all metric functions. Consider adding a confusion_matrix utility function that can be used by multiple metrics for efficiency.",
+            "status": "pending",
+            "testStrategy": "Test the integrated module to ensure all metrics can be imported and used correctly. Verify that documentation is accessible through Python's help system. Test any helper functions or combined metric calculations for correctness and efficiency. Ensure consistent behavior across all metrics when given the same inputs."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement Focal Loss function",
+        "description": "Add Focal Loss to mlx.nn.losses to help handle class imbalance problems.",
+        "details": "Implement the Focal Loss function as described in the paper 'Focal Loss for Dense Object Detection'. This loss function helps address class imbalance by down-weighting well-classified examples.\n\nImplementation should:\n1. Follow the formula: FL(pt) = -alpha * (1-pt)^gamma * log(pt)\n2. Support configurable alpha and gamma parameters\n3. Work for both binary and multi-class classification\n4. Be compatible with MLX's autograd system\n\nExample implementation:\n```python\ndef focal_loss(predictions, targets, alpha=0.25, gamma=2.0, reduction='mean'):\n    \"\"\"Compute focal loss for classification.\n    \n    Args:\n        predictions: Predicted logits before softmax\n        targets: Ground truth labels (class indices or one-hot)\n        alpha: Weighting factor for the rare class\n        gamma: Focusing parameter that reduces the loss contribution from easy examples\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        Computed focal loss\n    \"\"\"\n    if targets.ndim > 1:\n        # Handle one-hot encoded targets\n        pass\n    else:\n        # Convert class indices to one-hot\n        pass\n        \n    # Compute standard cross entropy\n    ce_loss = mx.nn.losses.cross_entropy(predictions, targets, reduction='none')\n    \n    # Apply focal loss formula\n    pt = mx.exp(-ce_loss)\n    focal_weight = alpha * mx.power(1 - pt, gamma)\n    loss = focal_weight * ce_loss\n    \n    # Apply reduction\n    if reduction == 'mean':\n        return mx.mean(loss)\n    elif reduction == 'sum':\n        return mx.sum(loss)\n    else:  # 'none'\n        return loss\n```",
+        "testStrategy": "Test with various alpha and gamma values. Compare against standard cross-entropy loss to verify behavior. Test with balanced and imbalanced datasets to confirm that it properly down-weights easy examples. Verify gradients flow correctly through the loss function.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement core Focal Loss function for binary classification",
+            "description": "Create the basic focal loss function that works for binary classification tasks, implementing the formula FL(pt) = -alpha * (1-pt)^gamma * log(pt).",
+            "dependencies": [],
+            "details": "Create a function that takes logits and binary targets as input. First convert logits to probabilities using sigmoid, then compute the standard binary cross entropy loss. Apply the focal loss formula by calculating pt (probability of the correct class) and applying the alpha and gamma parameters. Include parameter validation and proper handling of numerical stability issues. Implement the different reduction modes (mean, sum, none).",
+            "status": "pending",
+            "testStrategy": "Test with binary classification examples using various alpha and gamma values. Verify that when gamma=0 and alpha=1, the loss equals standard binary cross entropy. Test with perfect predictions and completely wrong predictions to verify expected behavior."
+          },
+          {
+            "id": 2,
+            "title": "Extend Focal Loss to support multi-class classification",
+            "description": "Extend the focal loss implementation to handle multi-class classification scenarios with class indices or one-hot encoded targets.",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Modify the focal loss function to handle multi-class inputs by detecting input shapes. For class indices, convert to one-hot representations. Use softmax instead of sigmoid for multi-class probabilities. Ensure the alpha parameter can be either a scalar (same for all classes) or a vector (different weight per class). Maintain the same interface as the binary version for consistency.",
+            "status": "pending",
+            "testStrategy": "Test with multi-class examples using both class indices and one-hot encoded targets. Verify results match expected values for different alpha and gamma configurations. Test with edge cases like single-class predictions and uniform predictions."
+          },
+          {
+            "id": 3,
+            "title": "Implement gradient computation compatibility",
+            "description": "Ensure the focal loss implementation is fully compatible with MLX's autograd system for proper gradient flow during training.",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "Review the implementation to ensure all operations use MLX's array operations that support automatic differentiation. Avoid in-place operations that might break the computation graph. Test gradient flow by computing gradients with respect to the predictions and verifying they have the expected shape and values. Ensure numerical stability by adding small epsilon values where needed to prevent log(0) and division by zero.",
+            "status": "pending",
+            "testStrategy": "Create a simple model that uses focal loss and verify gradients flow correctly during backpropagation. Compare gradients at different gamma values to ensure they scale as expected. Test with edge cases to ensure numerical stability."
+          },
+          {
+            "id": 4,
+            "title": "Create FocalLoss class for mlx.nn.losses module",
+            "description": "Implement a class-based version of focal loss that follows the pattern of other loss functions in mlx.nn.losses.",
+            "dependencies": [
+              "6.3"
+            ],
+            "details": "Create a FocalLoss class that inherits from a base loss class if available, or implements the necessary interface. The class should have an __init__ method that accepts alpha and gamma parameters, and a __call__ method that computes the loss. Include proper documentation with examples. Ensure the class implementation maintains all the functionality of the function-based version while following MLX's class patterns.",
+            "status": "pending",
+            "testStrategy": "Test the class with the same test cases used for the function version to ensure consistent behavior. Verify that the class can be instantiated with different parameters and used in a model training loop."
+          },
+          {
+            "id": 5,
+            "title": "Add comprehensive documentation and examples",
+            "description": "Create detailed documentation and usage examples for the focal loss implementation to help users understand when and how to use it.",
+            "dependencies": [
+              "6.4"
+            ],
+            "details": "Write docstrings that explain the purpose of focal loss, its mathematical formulation, and when it's most useful (class imbalance scenarios). Include parameter descriptions with default values and their effects. Create usage examples for both binary and multi-class classification scenarios. Add references to the original paper. Include examples showing how focal loss compares to standard cross entropy with imbalanced datasets.",
+            "status": "pending",
+            "testStrategy": "Review documentation for clarity and completeness. Ensure all examples run without errors and produce the expected outputs. Verify that the documentation follows the project's style guidelines."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Create mlx.utils.training module",
+        "description": "Set up the structure for the new mlx.utils.training module that will house training utilities and progress bars.",
+        "details": "Create a new directory structure for the mlx.utils.training module. This should include:\n1. Creating the module directory and __init__.py file\n2. Setting up proper imports and exports\n3. Defining the module's public API\n4. Adding documentation stubs\n5. Ensuring the module is properly exposed under the main mlx namespace\n\nThe module structure should follow MLX's existing conventions and be consistent with the project's architecture.",
+        "testStrategy": "Verify that the module can be imported correctly with `import mlx.utils.training`. Ensure that the module structure passes all linting checks and follows project conventions.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create directory structure and __init__.py file",
+            "description": "Create the mlx.utils.training directory and initialize it with an __init__.py file to make it a proper Python package.",
+            "dependencies": [],
+            "details": "1. Create the directory path mlx/utils/training/ if it doesn't exist\n2. Create an empty __init__.py file in the new directory\n3. Add a module docstring at the top of __init__.py explaining the purpose of the training module\n4. Add version information (__version__) if that's consistent with other MLX modules\n5. Ensure proper file permissions are set",
+            "status": "pending",
+            "testStrategy": "Verify the directory structure exists and the __init__.py file can be accessed. Check that the module can be imported with `import mlx.utils.training` without errors."
+          },
+          {
+            "id": 2,
+            "title": "Define public API and imports/exports",
+            "description": "Define the public API for the training module and set up the appropriate imports and exports in the __init__.py file.",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "1. Review existing MLX modules to understand the API design patterns\n2. Define a list of functions/classes that will be exposed (e.g., `__all__ = ['ProgressBar', 'Trainer']`)\n3. Add import statements for future implementations that will be part of this module\n4. Set up any necessary relative imports\n5. Ensure that imports follow the project's conventions for import organization",
+            "status": "pending",
+            "testStrategy": "Verify that the defined API elements are properly exposed when importing the module. Check that `dir(mlx.utils.training)` shows the expected public functions/classes."
+          },
+          {
+            "id": 3,
+            "title": "Update main mlx namespace to expose the training module",
+            "description": "Modify the necessary files to ensure the training module is properly exposed under the main mlx namespace.",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "1. Update the mlx/__init__.py file to include the new training module\n2. Add appropriate import statements (e.g., `from mlx.utils import training`)\n3. Update any namespace exports if necessary\n4. Ensure circular imports are avoided\n5. Maintain alphabetical ordering if that's the project convention",
+            "status": "pending",
+            "testStrategy": "Verify that the module can be imported via both `import mlx.utils.training` and through the main namespace if applicable. Ensure no import errors occur."
+          },
+          {
+            "id": 4,
+            "title": "Add documentation stubs for planned functionality",
+            "description": "Create documentation stubs for the planned functionality that will be implemented in the training module.",
+            "dependencies": [
+              "7.2"
+            ],
+            "details": "1. Add docstring templates for planned classes/functions\n2. Follow MLX's documentation style (likely NumPy or Google style)\n3. Include parameter descriptions, return values, and examples\n4. Add TODO comments where implementation details will be filled in later\n5. Ensure documentation references are consistent with the project's style guide",
+            "status": "pending",
+            "testStrategy": "Run documentation generation tools if available to verify the documentation format is correct. Review docstrings for completeness and adherence to project standards."
+          },
+          {
+            "id": 5,
+            "title": "Create module tests and verification",
+            "description": "Set up basic tests to verify the module structure and imports are working correctly.",
+            "dependencies": [
+              "7.3",
+              "7.4"
+            ],
+            "details": "1. Create a test file in the appropriate test directory (e.g., tests/utils/test_training.py)\n2. Write basic import tests to verify the module can be imported\n3. Add placeholder tests for planned functionality\n4. Ensure tests follow the project's testing conventions\n5. Add the new test file to any test discovery mechanisms in the project",
+            "status": "pending",
+            "testStrategy": "Run the test suite to verify that the new tests pass. Check that test coverage reporting includes the new module structure."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Implement training progress bar",
+        "description": "Create a visual progress bar utility that integrates with training loops to display progress, metrics, and timing information.",
+        "details": "Implement a progress bar utility that:\n1. Wraps iterables (especially DataLoader instances)\n2. Displays a visual progress indicator in the terminal\n3. Shows current epoch, iteration, and time elapsed\n4. Supports dynamic updating of metrics during training\n5. Has customizable formatting options\n\nExample implementation:\n```python\nclass ProgressBar:\n    def __init__(self, iterable, total=None, desc='', metrics=None):\n        self.iterable = iterable\n        self.total = total or len(iterable)\n        self.desc = desc\n        self.metrics = metrics or {}\n        self.start_time = time.time()\n        \n    def __iter__(self):\n        for obj in self.iterable:\n            yield obj\n            self._update_progress()\n            \n    def _update_progress(self):\n        # Update and display progress bar\n        pass\n        \n    def update_metrics(self, **metrics):\n        \"\"\"Update displayed metrics during iteration\"\"\"\n        self.metrics.update(metrics)\n```\n\nThe implementation should be efficient and not significantly impact training performance.",
+        "testStrategy": "Test with various iterables including DataLoader instances. Verify that progress is displayed correctly and updates at the expected rate. Test with long-running iterations to ensure the display remains responsive. Test with various terminal sizes and configurations.",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement ProgressBar class initialization and iteration",
+            "description": "Create the basic structure of the ProgressBar class with initialization and iteration functionality that wraps iterables.",
+            "dependencies": [],
+            "details": "Implement the ProgressBar class with the following components:\n1. Constructor that accepts an iterable, optional total length, description, and initial metrics dictionary\n2. Store start time when initialized\n3. Implement __iter__ method that yields items from the wrapped iterable\n4. Add basic structure for progress tracking\n\n```python\nimport time\n\nclass ProgressBar:\n    def __init__(self, iterable, total=None, desc='', metrics=None):\n        self.iterable = iterable\n        self.total = total or len(iterable)\n        self.desc = desc\n        self.metrics = metrics or {}\n        self.start_time = time.time()\n        self.current = 0\n        \n    def __iter__(self):\n        self.current = 0\n        self.start_time = time.time()\n        for obj in self.iterable:\n            yield obj\n            self.current += 1\n            self._update_progress()\n```",
+            "status": "pending",
+            "testStrategy": "Test initialization with different types of iterables (lists, DataLoader instances). Verify that iteration works correctly and yields all elements from the wrapped iterable. Test with both specified and unspecified total length."
+          },
+          {
+            "id": 2,
+            "title": "Implement progress bar display functionality",
+            "description": "Create the core display functionality that shows a visual progress bar in the terminal with current progress percentage.",
+            "dependencies": [
+              "8.1"
+            ],
+            "details": "Implement the _update_progress method to display a visual progress bar in the terminal:\n1. Calculate progress percentage\n2. Create a visual bar representation using characters (e.g., █ for completed, ░ for remaining)\n3. Display the bar with percentage\n4. Handle terminal width constraints\n5. Use carriage return (\\r) to update in-place\n\n```python\nimport sys\n\ndef _update_progress(self):\n    progress = self.current / self.total\n    bar_length = 30  # Adjust based on terminal width\n    filled_length = int(bar_length * progress)\n    \n    bar = '█' * filled_length + '░' * (bar_length - filled_length)\n    percentage = progress * 100\n    \n    # Basic progress display\n    output = f'\\r{self.desc} |{bar}| {percentage:.1f}%'\n    \n    sys.stdout.write(output)\n    sys.stdout.flush()\n    \n    # Add newline when complete\n    if self.current >= self.total:\n        sys.stdout.write('\\n')\n        sys.stdout.flush()\n```",
+            "status": "pending",
+            "testStrategy": "Test the visual display with various progress percentages. Verify that the bar updates correctly as progress increases. Test with different terminal widths. Ensure the display is properly cleared/updated between iterations."
+          },
+          {
+            "id": 3,
+            "title": "Add timing information display",
+            "description": "Enhance the progress bar to show elapsed time and estimated time remaining.",
+            "dependencies": [
+              "8.2"
+            ],
+            "details": "Extend the _update_progress method to calculate and display timing information:\n1. Calculate elapsed time since start\n2. Estimate time remaining based on current progress\n3. Format time values in a human-readable format (e.g., HH:MM:SS)\n4. Add timing information to the progress display\n\n```python\ndef _format_time(self, seconds):\n    \"\"\"Convert seconds to HH:MM:SS format\"\"\"\n    h = int(seconds // 3600)\n    m = int((seconds % 3600) // 60)\n    s = int(seconds % 60)\n    return f\"{h:02d}:{m:02d}:{s:02d}\"\n\ndef _update_progress(self):\n    progress = self.current / self.total\n    bar_length = 30\n    filled_length = int(bar_length * progress)\n    \n    bar = '█' * filled_length + '░' * (bar_length - filled_length)\n    percentage = progress * 100\n    \n    # Calculate timing information\n    elapsed = time.time() - self.start_time\n    elapsed_str = self._format_time(elapsed)\n    \n    if progress > 0:\n        eta = elapsed / progress - elapsed\n        eta_str = self._format_time(eta)\n    else:\n        eta_str = \"--:--:--\"\n    \n    # Enhanced progress display with timing\n    output = f'\\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]'\n    \n    sys.stdout.write(output)\n    sys.stdout.flush()\n    \n    if self.current >= self.total:\n        sys.stdout.write('\\n')\n        sys.stdout.flush()\n```",
+            "status": "pending",
+            "testStrategy": "Test with both fast and slow iterations to verify that timing calculations are accurate. Verify that elapsed time increases correctly and estimated time remaining decreases as progress is made. Test edge cases like 0% progress and 100% progress."
+          },
+          {
+            "id": 4,
+            "title": "Implement metrics display and updating",
+            "description": "Add functionality to display and dynamically update training metrics during iteration.",
+            "dependencies": [
+              "8.3"
+            ],
+            "details": "Implement metrics display and updating functionality:\n1. Create an update_metrics method to add or update metrics during iteration\n2. Format metrics for display (name: value)\n3. Integrate metrics display into the progress bar output\n\n```python\ndef update_metrics(self, **metrics):\n    \"\"\"Update displayed metrics during iteration\"\"\"\n    self.metrics.update(metrics)\n    self._update_progress()  # Refresh display with new metrics\n\ndef _format_metrics(self):\n    \"\"\"Format metrics dictionary for display\"\"\"\n    if not self.metrics:\n        return \"\"\n    \n    # Format each metric as \"name: value\" with proper formatting for different types\n    formatted = []\n    for name, value in self.metrics.items():\n        if isinstance(value, float):\n            formatted.append(f\"{name}: {value:.4f}\")\n        else:\n            formatted.append(f\"{name}: {value}\")\n    \n    return \" | \" + \" | \".join(formatted)\n\ndef _update_progress(self):\n    progress = self.current / self.total\n    bar_length = 30\n    filled_length = int(bar_length * progress)\n    \n    bar = '█' * filled_length + '░' * (bar_length - filled_length)\n    percentage = progress * 100\n    \n    # Calculate timing information\n    elapsed = time.time() - self.start_time\n    elapsed_str = self._format_time(elapsed)\n    \n    if progress > 0:\n        eta = elapsed / progress - elapsed\n        eta_str = self._format_time(eta)\n    else:\n        eta_str = \"--:--:--\"\n    \n    # Format metrics\n    metrics_str = self._format_metrics()\n    \n    # Complete progress display with metrics\n    output = f'\\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]{metrics_str}'\n    \n    sys.stdout.write(output)\n    sys.stdout.flush()\n    \n    if self.current >= self.total:\n        sys.stdout.write('\\n')\n        sys.stdout.flush()\n```",
+            "status": "pending",
+            "testStrategy": "Test updating metrics during iteration with various data types (floats, integers, strings). Verify that metrics display correctly and update when changed. Test with many metrics to ensure proper formatting and handling of terminal width constraints."
+          },
+          {
+            "id": 5,
+            "title": "Add customization options and performance optimization",
+            "description": "Implement customization options for the progress bar appearance and optimize performance to minimize impact on training loops.",
+            "dependencies": [
+              "8.4"
+            ],
+            "details": "Add customization options and performance optimizations:\n1. Add parameters to customize bar appearance (bar characters, width, etc.)\n2. Add option to control update frequency to reduce terminal I/O\n3. Implement terminal width detection for responsive display\n4. Add context manager support for non-iterable use cases\n5. Optimize performance to minimize impact on training loops\n\n```python\nimport time\nimport sys\nimport shutil\n\nclass ProgressBar:\n    def __init__(self, iterable=None, total=None, desc='', metrics=None, \n                 bar_width=30, fill_char='█', empty_char='░', \n                 update_freq=1):\n        self.iterable = iterable\n        self.total = total\n        if iterable is not None and total is None:\n            try:\n                self.total = len(iterable)\n            except (TypeError, AttributeError):\n                self.total = None\n        \n        self.desc = desc\n        self.metrics = metrics or {}\n        self.start_time = time.time()\n        self.current = 0\n        \n        # Customization options\n        self.bar_width = bar_width\n        self.fill_char = fill_char\n        self.empty_char = empty_char\n        self.update_freq = update_freq\n        self.last_update_time = 0\n    \n    def __iter__(self):\n        self.current = 0\n        self.start_time = time.time()\n        self.last_update_time = 0\n        \n        for obj in self.iterable:\n            yield obj\n            self.current += 1\n            \n            # Only update display based on frequency to reduce I/O overhead\n            current_time = time.time()\n            if (current_time - self.last_update_time >= self.update_freq) or (self.current >= self.total):\n                self._update_progress()\n                self.last_update_time = current_time\n    \n    def __enter__(self):\n        self.start_time = time.time()\n        self.last_update_time = 0\n        return self\n    \n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if self.current < self.total:\n            self.current = self.total\n            self._update_progress()\n    \n    def update(self, n=1):\n        \"\"\"Update progress by n steps (for non-iterable use)\"\"\"\n        self.current += n\n        current_time = time.time()\n        if (current_time - self.last_update_time >= self.update_freq) or (self.current >= self.total):\n            self._update_progress()\n            self.last_update_time = current_time\n    \n    def _get_terminal_width(self):\n        \"\"\"Get current terminal width\"\"\"\n        try:\n            return shutil.get_terminal_size().columns\n        except (AttributeError, ImportError):\n            return 80  # Default fallback width\n    \n    def _format_time(self, seconds):\n        \"\"\"Convert seconds to HH:MM:SS format\"\"\"\n        h = int(seconds // 3600)\n        m = int((seconds % 3600) // 60)\n        s = int(seconds % 60)\n        return f\"{h:02d}:{m:02d}:{s:02d}\"\n    \n    def _format_metrics(self):\n        \"\"\"Format metrics dictionary for display\"\"\"\n        if not self.metrics:\n            return \"\"\n        \n        formatted = []\n        for name, value in self.metrics.items():\n            if isinstance(value, float):\n                formatted.append(f\"{name}: {value:.4f}\")\n            else:\n                formatted.append(f\"{name}: {value}\")\n        \n        return \" | \" + \" | \".join(formatted)\n    \n    def update_metrics(self, **metrics):\n        \"\"\"Update displayed metrics during iteration\"\"\"\n        self.metrics.update(metrics)\n        current_time = time.time()\n        if current_time - self.last_update_time >= self.update_freq:\n            self._update_progress()\n            self.last_update_time = current_time\n    \n    def _update_progress(self):\n        if self.total is None:\n            # Handle case where total is unknown\n            elapsed = time.time() - self.start_time\n            elapsed_str = self._format_time(elapsed)\n            metrics_str = self._format_metrics()\n            output = f'\\r{self.desc} {self.current} items [elapsed: {elapsed_str}]{metrics_str}'\n        else:\n            progress = min(1.0, self.current / self.total)\n            \n            # Adjust bar width based on available terminal space\n            terminal_width = self._get_terminal_width()\n            available_width = terminal_width - 50  # Reserve space for text and metrics\n            bar_width = min(self.bar_width, max(10, available_width))\n            \n            filled_length = int(bar_width * progress)\n            bar = self.fill_char * filled_length + self.empty_char * (bar_width - filled_length)\n            percentage = progress * 100\n            \n            # Calculate timing information\n            elapsed = time.time() - self.start_time\n            elapsed_str = self._format_time(elapsed)\n            \n            if progress > 0 and progress < 1:\n                eta = elapsed / progress - elapsed\n                eta_str = self._format_time(eta)\n            else:\n                eta_str = \"--:--:--\"\n            \n            # Format metrics\n            metrics_str = self._format_metrics()\n            \n            # Complete progress display with metrics\n            output = f'\\r{self.desc} |{bar}| {percentage:.1f}% {self.current}/{self.total} [elapsed: {elapsed_str} eta: {eta_str}]{metrics_str}'\n        \n        # Ensure output doesn't exceed terminal width\n        if len(output) > self._get_terminal_width():\n            output = output[:self._get_terminal_width() - 3] + '...'\n        \n        sys.stdout.write(output)\n        sys.stdout.flush()\n        \n        if self.total is not None and self.current >= self.total:\n            sys.stdout.write('\\n')\n            sys.stdout.flush()\n```",
+            "status": "pending",
+            "testStrategy": "Test all customization options to verify they work as expected. Benchmark performance impact on training loops with and without the progress bar. Test with various terminal sizes and configurations. Verify context manager functionality for non-iterable use cases. Test with very frequent updates to ensure performance optimization is effective."
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Create mlx.utils.summary module",
+        "description": "Set up the structure for the new mlx.utils.summary module that will house model visualization and summary tools.",
+        "details": "Create a new directory structure for the mlx.utils.summary module. This should include:\n1. Creating the module directory and __init__.py file\n2. Setting up proper imports and exports\n3. Defining the module's public API\n4. Adding documentation stubs\n5. Ensuring the module is properly exposed under the main mlx namespace\n\nThe module structure should follow MLX's existing conventions and be consistent with the project's architecture.",
+        "testStrategy": "Verify that the module can be imported correctly with `import mlx.utils.summary`. Ensure that the module structure passes all linting checks and follows project conventions.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create directory structure and __init__.py file",
+            "description": "Create the necessary directory structure for the mlx.utils.summary module and set up the initial __init__.py file.",
+            "dependencies": [],
+            "details": "1. Create the directory path mlx/utils/summary/ if it doesn't exist\n2. Create an empty __init__.py file in the summary directory\n3. Add a module docstring at the top of __init__.py explaining the purpose of the module (model visualization and summary tools)\n4. Add version information (__version__ = '0.1.0') to track module versioning\n5. Ensure proper file permissions are set",
+            "status": "pending",
+            "testStrategy": "Verify the directory structure exists and the __init__.py file can be accessed. Check that the module can be imported with `import mlx.utils.summary` without errors."
+          },
+          {
+            "id": 2,
+            "title": "Define public API and imports/exports",
+            "description": "Define the public API for the summary module and set up the appropriate imports and exports in the __init__.py file.",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "1. Define a list of public functions/classes that will be exposed (e.g., `__all__ = ['model_summary', 'parameter_count']`)\n2. Add placeholder import statements for future implementations (commented out until implemented)\n3. Set up any necessary imports from other MLX modules\n4. Ensure that imports use relative imports where appropriate\n5. Add type hints for all public functions/classes",
+            "status": "pending",
+            "testStrategy": "Verify that the defined API elements are properly exposed when importing the module. Check that `dir(mlx.utils.summary)` shows the expected public functions/classes."
+          },
+          {
+            "id": 3,
+            "title": "Implement module registration in parent packages",
+            "description": "Update the parent module (__init__.py files in mlx and mlx.utils) to properly expose the new summary module.",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "1. Update mlx/utils/__init__.py to import and expose the summary module\n2. Ensure the summary module is included in the utils module's __all__ list\n3. Verify that the module can be accessed via both `mlx.utils.summary` and directly imported with `from mlx.utils import summary`\n4. Add any necessary cross-module dependencies\n5. Ensure backward compatibility is maintained if modifying existing files",
+            "status": "pending",
+            "testStrategy": "Test importing the module through different import paths: `import mlx.utils.summary`, `from mlx.utils import summary`, and `from mlx import utils` followed by `utils.summary`."
+          },
+          {
+            "id": 4,
+            "title": "Add documentation stubs and docstrings",
+            "description": "Create comprehensive documentation stubs and docstrings for the module and its planned functionality.",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "1. Add detailed module-level docstring explaining the purpose and usage of the summary module\n2. Create function/class docstring stubs for all planned public API elements\n3. Follow MLX's documentation style conventions (NumPy or Google style)\n4. Include parameter descriptions, return types, and usage examples in docstrings\n5. Add references to related modules or external resources where appropriate",
+            "status": "pending",
+            "testStrategy": "Run documentation generation tools to verify that the docstrings are properly formatted. Review the generated documentation to ensure it's clear and comprehensive."
+          },
+          {
+            "id": 5,
+            "title": "Create basic test file for the module",
+            "description": "Implement a basic test file to verify the module structure and imports are working correctly.",
+            "dependencies": [
+              "9.3"
+            ],
+            "details": "1. Create a test file at tests/test_utils_summary.py\n2. Implement basic import tests to verify the module can be imported\n3. Add placeholder tests for planned functionality (marked as skipped until implemented)\n4. Set up any necessary test fixtures\n5. Ensure tests follow the project's testing conventions and can be discovered by the test runner",
+            "status": "pending",
+            "testStrategy": "Run the test suite to verify that the basic import tests pass. Ensure that the test file is discovered by the test runner and that skipped tests are properly marked."
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Implement model summary utility",
+        "description": "Create a utility to print a concise, text-based overview of a model's architecture, including layers, output shapes, and parameter counts.",
+        "details": "Implement a model summary utility that:\n1. Takes a model instance as input\n2. Analyzes the model's structure, layers, and parameters\n3. Generates a formatted text table showing:\n   - Layer names and types\n   - Output shapes\n   - Parameter counts per layer\n   - Total parameter count\n4. Handles nested modules and complex architectures\n\nExample implementation:\n```python\ndef summary(model, input_shape=None, input_data=None):\n    \"\"\"Generate a text summary of a model.\n    \n    Args:\n        model: An MLX model instance\n        input_shape: Optional shape to infer output dimensions\n        input_data: Optional input data to trace through the model\n        \n    Returns:\n        A formatted string containing the model summary\n    \"\"\"\n    if input_data is None and input_shape is not None:\n        # Create dummy input based on shape\n        input_data = mx.zeros(input_shape)\n        \n    # Analyze model structure\n    layers = _extract_layers(model)\n    \n    # Calculate shapes and parameters\n    layer_info = []\n    for name, layer in layers:\n        # Calculate output shape and parameters\n        params = sum(p.size for p in layer.parameters().values())\n        layer_info.append({\n            'name': name,\n            'type': layer.__class__.__name__,\n            'params': params,\n            'shape': _infer_output_shape(layer, input_data)\n        })\n        \n    # Format as table\n    return _format_summary_table(layer_info)\n```",
+        "testStrategy": "Test with various model architectures, including sequential models, models with branches, and custom models. Verify that parameter counts match expected values. Test with and without input shape/data. Ensure the output is correctly formatted and readable.",
+        "priority": "medium",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement layer extraction function",
+            "description": "Create a function to recursively extract all layers from a model, handling nested modules and complex architectures.",
+            "dependencies": [],
+            "details": "Implement the `_extract_layers` function that traverses the model structure to identify all layers. The function should:\n1. Take a model instance as input\n2. Recursively explore the model's structure to find all layers\n3. Handle nested modules by flattening the hierarchy\n4. Return a list of tuples containing (layer_name, layer_instance)\n5. Maintain proper naming for nested layers (e.g., 'block1.conv1')\n\nExample implementation:\n```python\ndef _extract_layers(model, prefix=''):\n    layers = []\n    for name, module in model.named_modules():\n        full_name = f\"{prefix}.{name}\" if prefix else name\n        # Check if this is a leaf module (has no children modules)\n        if not list(module.modules()):\n            layers.append((full_name, module))\n    return layers\n```",
+            "status": "pending",
+            "testStrategy": "Test with various model architectures including sequential models, models with branches, and custom models with nested structures. Verify that all layers are correctly identified and named."
+          },
+          {
+            "id": 2,
+            "title": "Implement output shape inference function",
+            "description": "Create a function to infer the output shape of each layer given input data or shape.",
+            "dependencies": [],
+            "details": "Implement the `_infer_output_shape` function that determines the output shape of a layer. The function should:\n1. Take a layer instance and input data as parameters\n2. Forward the input through the layer to get the output\n3. Extract the shape information from the output\n4. Handle exceptions gracefully\n5. Return the output shape as a tuple or 'Unknown' if it cannot be determined\n\nExample implementation:\n```python\ndef _infer_output_shape(layer, input_data):\n    try:\n        # Try to forward the input through the layer\n        if input_data is not None:\n            output = layer(input_data)\n            return tuple(output.shape)\n        return \"Unknown\"\n    except Exception:\n        return \"Unknown\"\n```",
+            "status": "pending",
+            "testStrategy": "Test with various layer types and input shapes. Verify that the function correctly determines output shapes for common layers like Linear, Conv2d, etc. Test error handling with incompatible inputs."
+          },
+          {
+            "id": 3,
+            "title": "Implement summary table formatting function",
+            "description": "Create a function to format layer information into a readable text table.",
+            "dependencies": [],
+            "details": "Implement the `_format_summary_table` function that formats the collected layer information into a readable text table. The function should:\n1. Take a list of layer information dictionaries as input\n2. Calculate column widths based on content\n3. Create a header row with column names\n4. Format each layer's information as a row in the table\n5. Add a summary row with total parameter count\n6. Return the formatted table as a string\n\nExample implementation:\n```python\ndef _format_summary_table(layer_info):\n    # Define column headers and widths\n    headers = [\"Layer (type)\", \"Output Shape\", \"Param #\"]\n    col_widths = [max(len(headers[0]), max(len(f\"{l['name']} ({l['type']})\") for l in layer_info)),\n                 max(len(headers[1]), max(len(str(l['shape'])) for l in layer_info)),\n                 max(len(headers[2]), max(len(f\"{l['params']:,}\") for l in layer_info))]\n    \n    # Create header row\n    header = \"|\" + \"|\".join(h.ljust(w) for h, w in zip(headers, col_widths)) + \"|\"\n    separator = \"|\" + \"|\".join(\"-\" * w for w in col_widths) + \"|\"\n    \n    # Create rows for each layer\n    rows = []\n    total_params = 0\n    for layer in layer_info:\n        total_params += layer['params']\n        row = f\"|{layer['name']} ({layer['type']})\".\\\n              ljust(col_widths[0]) + \"|\" + \\\n              f\"{layer['shape']}\".\\\n              ljust(col_widths[1]) + \"|\" + \\\n              f\"{layer['params']:,}\".\\\n              ljust(col_widths[2]) + \"|\"\n        rows.append(row)\n    \n    # Add total parameters row\n    total_row = f\"|Total params:\".\\\n                ljust(col_widths[0] + col_widths[1] + 1) + \"|\" + \\\n                f\"{total_params:,}\".\\\n                ljust(col_widths[2]) + \"|\"\n    \n    # Combine all parts\n    table = \"\\n\".join([header, separator] + rows + [separator, total_row])\n    return table\n```",
+            "status": "pending",
+            "testStrategy": "Test with various layer information inputs, including different layer types, shapes, and parameter counts. Verify that the table is correctly formatted with proper alignment and separators. Check that the total parameter count is calculated correctly."
+          },
+          {
+            "id": 4,
+            "title": "Implement main summary function",
+            "description": "Create the main summary function that integrates the helper functions and provides the complete model summary.",
+            "dependencies": [
+              "10.1",
+              "10.2",
+              "10.3"
+            ],
+            "details": "Implement the main `summary` function that integrates the helper functions to generate a complete model summary. The function should:\n1. Take a model instance, optional input shape, and optional input data as parameters\n2. Create dummy input data if only input shape is provided\n3. Call _extract_layers to get all layers in the model\n4. For each layer, calculate output shape and parameter count\n5. Format the information using _format_summary_table\n6. Return the formatted summary as a string\n\nExample implementation:\n```python\ndef summary(model, input_shape=None, input_data=None):\n    \"\"\"Generate a text summary of a model.\n    \n    Args:\n        model: An MLX model instance\n        input_shape: Optional shape to infer output dimensions\n        input_data: Optional input data to trace through the model\n        \n    Returns:\n        A formatted string containing the model summary\n    \"\"\"\n    if input_data is None and input_shape is not None:\n        # Create dummy input based on shape\n        input_data = mx.zeros(input_shape)\n    \n    # Analyze model structure\n    layers = _extract_layers(model)\n    \n    # Calculate shapes and parameters\n    layer_info = []\n    for name, layer in layers:\n        # Calculate output shape and parameters\n        params = sum(p.size for p in layer.parameters().values())\n        layer_info.append({\n            'name': name,\n            'type': layer.__class__.__name__,\n            'params': params,\n            'shape': _infer_output_shape(layer, input_data)\n        })\n    \n    # Format as table\n    return _format_summary_table(layer_info)\n```",
+            "status": "pending",
+            "testStrategy": "Test with various model architectures, including sequential models, models with branches, and custom models. Verify that parameter counts match expected values. Test with and without input shape/data. Ensure the output is correctly formatted and readable."
+          },
+          {
+            "id": 5,
+            "title": "Add documentation and examples",
+            "description": "Add comprehensive documentation and usage examples for the model summary utility.",
+            "dependencies": [
+              "10.4"
+            ],
+            "details": "Create comprehensive documentation and usage examples for the model summary utility. This should include:\n1. Detailed docstrings for all functions\n2. Type hints for function parameters and return values\n3. Usage examples showing how to use the summary function with different model types\n4. Explanation of the output format\n5. Notes on limitations and edge cases\n\nExample implementation:\n```python\ndef summary(model, input_shape=None, input_data=None):\n    \"\"\"Generate a text summary of a model's architecture.\n    \n    This function analyzes a model's structure and generates a formatted text table\n    showing layer names, types, output shapes, and parameter counts.\n    \n    Args:\n        model: An MLX model instance to summarize\n        input_shape: Optional tuple specifying input shape to infer output dimensions\n                    (e.g., (batch_size, channels, height, width) for images)\n        input_data: Optional input tensor to trace through the model\n                   (overrides input_shape if both are provided)\n        \n    Returns:\n        str: A formatted string containing the model summary table\n        \n    Examples:\n        >>> model = nn.Sequential([nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 1)])\n        >>> print(summary(model, input_shape=(1, 10)))\n        \n        | Layer (type)     | Output Shape | Param # |\n        |------------------|--------------|--------|\n        | 0 (Linear)       | (1, 20)      | 220    |\n        | 1 (ReLU)         | (1, 20)      | 0      |\n        | 2 (Linear)       | (1, 1)       | 21     |\n        |------------------|--------------|--------|\n        | Total params:                   | 241    |\n        \n    Notes:\n        - If neither input_shape nor input_data is provided, output shapes\n          will be shown as \"Unknown\"\n        - For complex models with dynamic computation paths, the summary\n          may not capture all possible execution paths\n    \"\"\"\n    # Implementation as before\n```\n\nAlso include a separate examples file or section showing usage with different model types:\n\n```python\n# Example usage with different model types\nimport mlx.core as mx\nimport mlx.nn as nn\nfrom mlx.utils import summary\n\n# Example 1: Sequential model\nmodel1 = nn.Sequential([nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 1)])\nprint(summary(model1, input_shape=(1, 10)))\n\n# Example 2: Custom model with nested structure\nclass MyModel(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.feature_extractor = nn.Sequential([\n            nn.Conv2d(3, 16, kernel_size=3, padding=1),\n            nn.ReLU(),\n            nn.MaxPool2d(kernel_size=2)\n        ])\n        self.classifier = nn.Sequential([\n            nn.Linear(16*14*14, 128),\n            nn.ReLU(),\n            nn.Linear(128, 10)\n        ])\n    \n    def __call__(self, x):\n        x = self.feature_extractor(x)\n        x = x.reshape(x.shape[0], -1)\n        return self.classifier(x)\n\nmodel2 = MyModel()\nprint(summary(model2, input_shape=(1, 3, 28, 28)))\n```",
+            "status": "pending",
+            "testStrategy": "Review documentation for clarity, completeness, and correctness. Verify that all examples run without errors and produce the expected output. Check that type hints are correct and helpful."
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Implement Dice Loss function",
+        "description": "Add Dice Loss to mlx.nn.losses to support segmentation tasks.",
+        "details": "Implement the Dice Loss function, which is particularly useful for image segmentation tasks. The Dice coefficient measures the overlap between predicted and ground truth segmentation masks.\n\nImplementation should:\n1. Follow the formula: DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|)\n2. Support smooth factor to prevent division by zero\n3. Work for both binary and multi-class segmentation\n4. Be compatible with MLX's autograd system\n\nExample implementation:\n```python\ndef dice_loss(predictions, targets, smooth=1.0, reduction='mean'):\n    \"\"\"Compute Dice loss for segmentation.\n    \n    Args:\n        predictions: Predicted probabilities after sigmoid/softmax\n        targets: Ground truth masks\n        smooth: Small constant to avoid division by zero\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        Computed Dice loss\n    \"\"\"\n    # Flatten predictions and targets\n    predictions = predictions.reshape(-1)\n    targets = targets.reshape(-1)\n    \n    # Calculate intersection and union\n    intersection = mx.sum(predictions * targets)\n    union = mx.sum(predictions) + mx.sum(targets)\n    \n    # Calculate Dice coefficient\n    dice = (2.0 * intersection + smooth) / (union + smooth)\n    loss = 1.0 - dice\n    \n    # Apply reduction\n    if reduction == 'mean':\n        return loss\n    elif reduction == 'sum':\n        return loss * predictions.shape[0]\n    else:  # 'none'\n        return loss\n```",
+        "testStrategy": "Test with binary and multi-class segmentation examples. Verify behavior with perfect overlap, no overlap, and partial overlap cases. Test with various smooth values. Ensure gradients flow correctly through the loss function.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement basic binary Dice Loss function",
+            "description": "Create the core implementation of Dice Loss for binary segmentation tasks, following the formula DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|) with smooth factor support.",
+            "dependencies": [],
+            "details": "def dice_loss(predictions, targets, smooth=1.0, reduction='mean'):\n    \"\"\"Compute Dice loss for binary segmentation.\n    \n    Args:\n        predictions: Predicted probabilities after sigmoid (shape: [batch_size, height, width])\n        targets: Ground truth binary masks (shape: [batch_size, height, width])\n        smooth: Small constant to avoid division by zero\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        Computed Dice loss\n    \"\"\"\n    # Flatten predictions and targets\n    predictions = predictions.reshape(-1)\n    targets = targets.reshape(-1)\n    \n    # Calculate intersection and union\n    intersection = mx.sum(predictions * targets)\n    union = mx.sum(predictions) + mx.sum(targets)\n    \n    # Calculate Dice coefficient\n    dice = (2.0 * intersection + smooth) / (union + smooth)\n    loss = 1.0 - dice\n    \n    # Apply reduction\n    if reduction == 'mean':\n        return loss\n    elif reduction == 'sum':\n        return loss * predictions.shape[0]\n    else:  # 'none':\n        return loss",
+            "status": "pending",
+            "testStrategy": "Test with binary segmentation examples using synthetic data. Create test cases for perfect overlap (loss=0), no overlap (loss=1), and partial overlap. Verify behavior with different smooth values (0.0, 1.0, 0.01). Ensure the function works with batched inputs."
+          },
+          {
+            "id": 2,
+            "title": "Extend Dice Loss for multi-class segmentation",
+            "description": "Enhance the Dice Loss implementation to support multi-class segmentation by computing the loss for each class and averaging.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "def dice_loss_multiclass(predictions, targets, smooth=1.0, reduction='mean'):\n    \"\"\"Compute Dice loss for multi-class segmentation.\n    \n    Args:\n        predictions: Predicted probabilities after softmax \n                    (shape: [batch_size, num_classes, height, width])\n        targets: One-hot encoded ground truth masks \n                (shape: [batch_size, num_classes, height, width])\n        smooth: Small constant to avoid division by zero\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        Computed Dice loss averaged over classes\n    \"\"\"\n    # Get number of classes\n    num_classes = predictions.shape[1]\n    \n    # Initialize total loss\n    total_loss = 0.0\n    \n    # Calculate loss for each class\n    for cls in range(num_classes):\n        pred_cls = predictions[:, cls]\n        target_cls = targets[:, cls]\n        \n        # Use the binary dice loss implementation\n        cls_loss = dice_loss(pred_cls, target_cls, smooth, 'none')\n        total_loss += cls_loss\n    \n    # Average over classes\n    loss = total_loss / num_classes\n    \n    # Apply reduction\n    if reduction == 'mean':\n        return mx.mean(loss)\n    elif reduction == 'sum':\n        return mx.sum(loss)\n    else:  # 'none'\n        return loss",
+            "status": "pending",
+            "testStrategy": "Test with multi-class segmentation examples (3-5 classes). Verify that loss is calculated correctly for each class and properly averaged. Test with imbalanced class distributions. Compare results with the binary implementation for a 2-class case to ensure consistency."
+          },
+          {
+            "id": 3,
+            "title": "Create unified Dice Loss interface with class weighting",
+            "description": "Develop a unified interface for Dice Loss that handles both binary and multi-class cases automatically, with support for class weighting to handle imbalanced datasets.",
+            "dependencies": [
+              "11.1",
+              "11.2"
+            ],
+            "details": "def dice_loss(predictions, targets, smooth=1.0, reduction='mean', weight=None):\n    \"\"\"Unified Dice loss for both binary and multi-class segmentation.\n    \n    Args:\n        predictions: Predicted probabilities after sigmoid/softmax\n                    Binary: [batch_size, height, width] or [batch_size, 1, height, width]\n                    Multi-class: [batch_size, num_classes, height, width]\n        targets: Ground truth masks with same shape as predictions\n        smooth: Small constant to avoid division by zero\n        reduction: 'mean', 'sum', or 'none'\n        weight: Optional class weights tensor of shape [num_classes]\n               to handle class imbalance\n        \n    Returns:\n        Computed Dice loss\n    \"\"\"\n    # Determine if binary or multi-class based on shape\n    if len(predictions.shape) == 3 or (len(predictions.shape) == 4 and predictions.shape[1] == 1):\n        # Binary case\n        if len(predictions.shape) == 4:\n            predictions = predictions.squeeze(1)\n            if len(targets.shape) == 4:\n                targets = targets.squeeze(1)\n        return dice_loss_binary(predictions, targets, smooth, reduction)\n    else:\n        # Multi-class case\n        return dice_loss_multiclass(predictions, targets, smooth, reduction, weight)\n\ndef dice_loss_binary(predictions, targets, smooth=1.0, reduction='mean'):\n    # Implementation from subtask 11.1\n    # ...\n\ndef dice_loss_multiclass(predictions, targets, smooth=1.0, reduction='mean', weight=None):\n    \"\"\"Multi-class Dice loss with optional class weighting.\"\"\"\n    num_classes = predictions.shape[1]\n    \n    # Initialize total loss\n    total_loss = 0.0\n    \n    # Calculate loss for each class\n    for cls in range(num_classes):\n        pred_cls = predictions[:, cls]\n        target_cls = targets[:, cls]\n        \n        # Calculate binary dice loss for this class\n        cls_loss = dice_loss_binary(pred_cls, target_cls, smooth, 'none')\n        \n        # Apply class weighting if provided\n        if weight is not None:\n            cls_loss = cls_loss * weight[cls]\n        \n        total_loss += cls_loss\n    \n    # Normalize by sum of weights or number of classes\n    if weight is not None:\n        total_loss = total_loss / mx.sum(weight)\n    else:\n        total_loss = total_loss / num_classes\n    \n    # Apply reduction\n    if reduction == 'mean':\n        return mx.mean(total_loss)\n    elif reduction == 'sum':\n        return mx.sum(total_loss)\n    else:  # 'none'\n        return total_loss",
+            "status": "pending",
+            "testStrategy": "Test automatic detection of binary vs. multi-class inputs. Test with various input shapes to ensure correct handling. Verify class weighting works correctly by creating imbalanced test data and comparing weighted vs. unweighted results. Test edge cases like single-class segmentation."
+          },
+          {
+            "id": 4,
+            "title": "Implement DiceLoss as an nn.Module class",
+            "description": "Create a DiceLoss class that inherits from nn.Module to provide a consistent interface with other MLX loss functions and enable easy integration into training loops.",
+            "dependencies": [
+              "11.3"
+            ],
+            "details": "import mlx.nn as nn\nimport mlx.core as mx\n\nclass DiceLoss(nn.Module):\n    \"\"\"Dice Loss module for image segmentation tasks.\n    \n    Computes the Dice Loss between predictions and targets, which is useful\n    for handling imbalanced segmentation problems.\n    \n    Args:\n        smooth (float): Small constant to avoid division by zero\n        reduction (str): Specifies the reduction to apply: 'none', 'mean', 'sum'\n        weight (Optional[mx.array]): Manual rescaling weight for each class\n    \"\"\"\n    \n    def __init__(self, smooth=1.0, reduction='mean', weight=None):\n        super().__init__()\n        self.smooth = smooth\n        self.reduction = reduction\n        self.weight = weight\n    \n    def __call__(self, predictions, targets):\n        \"\"\"Forward pass for Dice Loss.\n        \n        Args:\n            predictions: Predicted probabilities after sigmoid/softmax\n                        Binary: [batch_size, height, width] or [batch_size, 1, height, width]\n                        Multi-class: [batch_size, num_classes, height, width]\n            targets: Ground truth masks with same shape as predictions\n            \n        Returns:\n            Computed Dice loss\n        \"\"\"\n        return dice_loss(predictions, targets, \n                        smooth=self.smooth, \n                        reduction=self.reduction, \n                        weight=self.weight)",
+            "status": "pending",
+            "testStrategy": "Test the DiceLoss class with both binary and multi-class inputs. Verify that it produces the same results as the functional implementation. Test that it can be used in a training loop with autograd. Ensure parameters like smooth, reduction, and weight are correctly passed to the underlying implementation."
+          },
+          {
+            "id": 5,
+            "title": "Add documentation and integrate with mlx.nn.losses module",
+            "description": "Document the Dice Loss implementation and integrate it with the mlx.nn.losses module to make it available alongside other loss functions.",
+            "dependencies": [
+              "11.3",
+              "11.4"
+            ],
+            "details": "# Add to mlx/nn/losses.py\n\n# Import necessary modules\nimport mlx.core as mx\nfrom typing import Optional, Literal\n\n# Add function signature to __all__ list\n__all__ = [..., 'dice_loss', 'DiceLoss']\n\n# Add the functional implementation\ndef dice_loss(predictions: mx.array, \n             targets: mx.array, \n             smooth: float = 1.0, \n             reduction: Literal['none', 'mean', 'sum'] = 'mean',\n             weight: Optional[mx.array] = None) -> mx.array:\n    \"\"\"Compute Dice loss for image segmentation tasks.\n    \n    The Dice loss is useful for handling imbalanced segmentation problems as it\n    focuses on the overlap between predictions and ground truth masks rather than\n    pixel-wise accuracy.\n    \n    Formula: DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|)\n    \n    Args:\n        predictions: Predicted probabilities after sigmoid/softmax\n                    Binary: [batch_size, height, width] or [batch_size, 1, height, width]\n                    Multi-class: [batch_size, num_classes, height, width]\n        targets: Ground truth masks with same shape as predictions\n        smooth: Small constant to avoid division by zero\n        reduction: Specifies the reduction to apply:\n                  'none': no reduction will be applied\n                  'mean': the weighted mean of the output is taken\n                  'sum': the output will be summed\n        weight: Optional class weights tensor of shape [num_classes]\n               to handle class imbalance\n        \n    Returns:\n        Computed Dice loss\n    \n    Examples:\n        >>> # Binary segmentation\n        >>> predictions = mx.sigmoid(logits)  # [batch_size, height, width]\n        >>> loss = dice_loss(predictions, targets)\n        >>>\n        >>> # Multi-class segmentation\n        >>> predictions = mx.softmax(logits, axis=1)  # [batch_size, num_classes, height, width]\n        >>> loss = dice_loss(predictions, targets)\n    \"\"\"\n    # Implementation from subtask 11.3\n    # ...\n\n# Add the module implementation\nclass DiceLoss(nn.Module):\n    \"\"\"Dice Loss module for image segmentation tasks.\n    \n    Computes the Dice Loss between predictions and targets, which is useful\n    for handling imbalanced segmentation problems.\n    \n    Args:\n        smooth (float): Small constant to avoid division by zero\n        reduction (str): Specifies the reduction to apply: 'none', 'mean', 'sum'\n        weight (Optional[mx.array]): Manual rescaling weight for each class\n    \n    Examples:\n        >>> # Create a Dice Loss instance\n        >>> criterion = nn.DiceLoss(smooth=1.0)\n        >>> # Binary segmentation\n        >>> predictions = mx.sigmoid(logits)\n        >>> loss = criterion(predictions, targets)\n        >>>\n        >>> # Multi-class segmentation with class weights\n        >>> weights = mx.array([0.5, 1.0, 2.0])  # Weight classes differently\n        >>> criterion = nn.DiceLoss(weight=weights)\n        >>> predictions = mx.softmax(logits, axis=1)\n        >>> loss = criterion(predictions, targets)\n    \"\"\"\n    # Implementation from subtask 11.4\n    # ...\n\n# Add tests to tests/nn/test_losses.py\ndef test_dice_loss():\n    # Test binary case\n    # Test multi-class case\n    # Test with different reduction modes\n    # Test with class weights\n    # ...\n\ndef test_dice_loss_module():\n    # Test the module implementation\n    # ...\n\n# Update documentation in docs/source/nn.rst to include the new loss function",
+            "status": "pending",
+            "testStrategy": "Verify documentation is complete and follows MLX style guidelines. Run doctest examples to ensure they work correctly. Test integration with the losses module by importing and using the functions from mlx.nn.losses. Run the test suite to ensure all tests pass."
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Implement common dataset transformations",
+        "description": "Create a set of common data transformation utilities to preprocess data before feeding it to models.",
+        "details": "Implement a collection of data transformation utilities that:\n1. Can be composed together in a pipeline\n2. Support common operations like normalization, resizing, cropping, and augmentation\n3. Work seamlessly with the Dataset class\n\nExample implementation:\n```python\nclass Transform:\n    \"\"\"Base class for all transforms\"\"\"\n    def __call__(self, sample):\n        raise NotImplementedError\n\nclass Compose(Transform):\n    \"\"\"Compose multiple transforms together\"\"\"\n    def __init__(self, transforms):\n        self.transforms = transforms\n        \n    def __call__(self, sample):\n        for transform in self.transforms:\n            sample = transform(sample)\n        return sample\n\nclass Normalize(Transform):\n    \"\"\"Normalize tensor values\"\"\"\n    def __init__(self, mean, std):\n        self.mean = mean\n        self.std = std\n        \n    def __call__(self, sample):\n        return (sample - self.mean) / self.std\n\n# Additional transforms: Resize, RandomCrop, RandomFlip, etc.\n```\n\nThe implementation should be efficient and compatible with MLX's array operations.",
+        "testStrategy": "Test each transform individually with various input types and shapes. Test composition of multiple transforms. Verify that transformations produce the expected output. Test with edge cases like empty arrays or extreme values.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Transform base class and Compose transform",
+            "description": "Create the foundational Transform base class that all transforms will inherit from, and implement the Compose transform that allows chaining multiple transforms together.",
+            "dependencies": [],
+            "details": "Create two classes:\n\n1. `Transform`: An abstract base class that defines the interface for all transforms with a `__call__` method.\n2. `Compose`: A concrete transform that takes a list of transforms and applies them sequentially.\n\nEnsure the implementation follows the example structure and is compatible with MLX's array operations. The `Compose` transform should handle edge cases like empty transform lists.",
+            "status": "pending",
+            "testStrategy": "Test the Compose transform with various combinations of mock transforms to verify correct sequential application. Test edge cases like empty transform lists and single transform lists."
+          },
+          {
+            "id": 2,
+            "title": "Implement normalization transforms",
+            "description": "Create transforms for normalizing data, including standard normalization, min-max scaling, and standardization.",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Implement the following normalization transforms:\n\n1. `Normalize`: Normalize tensor values using mean and standard deviation\n2. `MinMaxScale`: Scale values to a specific range (default 0-1)\n3. `Standardize`: Transform data to have zero mean and unit variance\n\nEach transform should work with MLX arrays and handle both single samples and batches of data. Include options for channel-wise normalization for image data.",
+            "status": "pending",
+            "testStrategy": "Test each normalization transform with various input shapes and data types. Verify correct normalization by comparing against manually calculated expected outputs. Test with edge cases like zero standard deviation and extreme values."
+          },
+          {
+            "id": 3,
+            "title": "Implement image resizing and cropping transforms",
+            "description": "Create transforms for resizing and cropping images, including both deterministic and random variants.",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Implement the following image transformation classes:\n\n1. `Resize`: Resize images to a specified size\n2. `CenterCrop`: Crop the center part of an image\n3. `RandomCrop`: Randomly crop an image\n4. `RandomResizedCrop`: Randomly crop and resize an image\n\nEnsure these transforms work with MLX arrays and handle both single images and batches. Include parameters for interpolation methods where applicable.",
+            "status": "pending",
+            "testStrategy": "Test each transform with various image sizes and formats. Verify that output dimensions match expected values. For random transforms, test with fixed seeds to ensure reproducibility. Test edge cases like when crop size equals or exceeds image size."
+          },
+          {
+            "id": 4,
+            "title": "Implement data augmentation transforms",
+            "description": "Create transforms for data augmentation, including flipping, rotation, color jittering, and other common augmentation techniques.",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Implement the following data augmentation transforms:\n\n1. `RandomHorizontalFlip`: Randomly flip images horizontally\n2. `RandomVerticalFlip`: Randomly flip images vertically\n3. `RandomRotation`: Randomly rotate images by a specified angle range\n4. `ColorJitter`: Randomly change brightness, contrast, saturation, and hue\n5. `RandomErasing`: Randomly erase rectangular regions from images\n\nEach transform should include a probability parameter where appropriate and work efficiently with MLX arrays.",
+            "status": "pending",
+            "testStrategy": "Test each augmentation transform with various input images. Verify that transformations produce visually correct results. Test probability parameters to ensure random transforms are applied at the expected rate. Test with edge cases and extreme parameter values."
+          },
+          {
+            "id": 5,
+            "title": "Integrate transforms with Dataset class",
+            "description": "Ensure all transforms work seamlessly with the Dataset class and implement utility functions for common transform combinations.",
+            "dependencies": [
+              "12.1",
+              "12.2",
+              "12.3",
+              "12.4"
+            ],
+            "details": "1. Create example implementations showing how to use transforms with the Dataset class\n2. Implement utility functions for common transform combinations (e.g., `get_train_transforms()`, `get_eval_transforms()`)\n3. Add documentation and usage examples for all transforms\n4. Ensure efficient application of transforms during dataset iteration\n5. Implement a method to visualize the effect of transforms on sample data\n\nTest the integration with various dataset types and ensure transforms are applied correctly during data loading.",
+            "status": "pending",
+            "testStrategy": "Create end-to-end tests that verify transforms work correctly when integrated with Dataset and DataLoader classes. Test performance with large datasets to ensure efficient transformation. Create visualization tests to verify the visual effect of transforms on sample data."
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Implement regression metrics",
+        "description": "Add regression metrics such as Mean Squared Error (MSE), Mean Absolute Error (MAE), and R-squared to the mlx.metrics module.",
+        "details": "Implement the following regression metrics:\n1. Mean Squared Error (MSE): average of squared differences between predictions and targets\n2. Mean Absolute Error (MAE): average of absolute differences between predictions and targets\n3. R-squared (coefficient of determination): proportion of variance in the dependent variable predictable from the independent variable(s)\n\nExample implementation for MSE:\n```python\ndef mean_squared_error(predictions, targets, reduction='mean'):\n    \"\"\"Calculate Mean Squared Error.\n    \n    Args:\n        predictions: Model predictions\n        targets: Ground truth values\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        MSE value\n    \"\"\"\n    squared_diff = mx.square(predictions - targets)\n    \n    if reduction == 'mean':\n        return mx.mean(squared_diff)\n    elif reduction == 'sum':\n        return mx.sum(squared_diff)\n    else:  # 'none'\n        return squared_diff\n```",
+        "testStrategy": "Test each metric with various input shapes and types. Compare results against known values for validation. Test edge cases like perfect predictions and extreme values. Verify that the metrics handle batched inputs correctly.",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Mean Squared Error (MSE) metric",
+            "description": "Create a function to calculate Mean Squared Error between predictions and targets with support for different reduction methods.",
+            "dependencies": [],
+            "details": "def mean_squared_error(predictions, targets, reduction='mean'):\n    \"\"\"Calculate Mean Squared Error.\n    \n    Args:\n        predictions: Model predictions\n        targets: Ground truth values\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        MSE value\n    \"\"\"\n    squared_diff = mx.square(predictions - targets)\n    \n    if reduction == 'mean':\n        return mx.mean(squared_diff)\n    elif reduction == 'sum':\n        return mx.sum(squared_diff)\n    else:  # 'none':\n        return squared_diff",
+            "status": "pending",
+            "testStrategy": "Test with various input shapes and types. Compare against known values. Test edge cases like perfect predictions (all zeros) and extreme values. Verify handling of different reduction methods."
+          },
+          {
+            "id": 2,
+            "title": "Implement Mean Absolute Error (MAE) metric",
+            "description": "Create a function to calculate Mean Absolute Error between predictions and targets with support for different reduction methods.",
+            "dependencies": [],
+            "details": "def mean_absolute_error(predictions, targets, reduction='mean'):\n    \"\"\"Calculate Mean Absolute Error.\n    \n    Args:\n        predictions: Model predictions\n        targets: Ground truth values\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        MAE value\n    \"\"\"\n    absolute_diff = mx.abs(predictions - targets)\n    \n    if reduction == 'mean':\n        return mx.mean(absolute_diff)\n    elif reduction == 'sum':\n        return mx.sum(absolute_diff)\n    else:  # 'none':\n        return absolute_diff",
+            "status": "pending",
+            "testStrategy": "Test with various input shapes and types. Compare against known values. Test edge cases like perfect predictions and extreme values. Verify handling of different reduction methods."
+          },
+          {
+            "id": 3,
+            "title": "Implement R-squared (coefficient of determination) metric",
+            "description": "Create a function to calculate the R-squared value, which represents the proportion of variance in the dependent variable that is predictable from the independent variable(s).",
+            "dependencies": [],
+            "details": "def r_squared(predictions, targets):\n    \"\"\"Calculate R-squared (coefficient of determination).\n    \n    Args:\n        predictions: Model predictions\n        targets: Ground truth values\n        \n    Returns:\n        R-squared value\n    \"\"\"\n    # Total sum of squares (proportional to variance of the data)\n    ss_tot = mx.sum(mx.square(targets - mx.mean(targets)))\n    \n    # Residual sum of squares\n    ss_res = mx.sum(mx.square(targets - predictions))\n    \n    # Handle edge case where all targets are the same value\n    if ss_tot == 0:\n        return 1.0 if mx.all(predictions == targets) else 0.0\n        \n    # R-squared formula\n    return 1 - (ss_res / ss_tot)",
+            "status": "pending",
+            "testStrategy": "Test with various input distributions. Verify that perfect predictions yield R-squared of 1.0. Test with predictions equal to mean of targets (should yield 0.0). Test with random predictions (should yield negative values). Handle edge case where all targets are identical."
+          },
+          {
+            "id": 4,
+            "title": "Implement Root Mean Squared Error (RMSE) metric",
+            "description": "Create a function to calculate Root Mean Squared Error, which is the square root of MSE and provides error values in the same units as the target variable.",
+            "dependencies": [
+              "13.1"
+            ],
+            "details": "def root_mean_squared_error(predictions, targets, reduction='mean'):\n    \"\"\"Calculate Root Mean Squared Error.\n    \n    Args:\n        predictions: Model predictions\n        targets: Ground truth values\n        reduction: 'mean', 'sum', or 'none'\n        \n    Returns:\n        RMSE value\n    \"\"\"\n    mse = mean_squared_error(predictions, targets, reduction='none')\n    \n    if reduction == 'mean':\n        return mx.sqrt(mx.mean(mse))\n    elif reduction == 'sum':\n        return mx.sqrt(mx.sum(mse))\n    else:  # 'none':\n        return mx.sqrt(mse)",
+            "status": "pending",
+            "testStrategy": "Test with various input shapes and types. Verify that RMSE is always the square root of MSE. Test edge cases like perfect predictions. Verify handling of different reduction methods."
+          },
+          {
+            "id": 5,
+            "title": "Create metrics module integration and documentation",
+            "description": "Integrate all implemented regression metrics into the mlx.metrics module with proper documentation and examples.",
+            "dependencies": [
+              "13.1",
+              "13.2",
+              "13.3",
+              "13.4"
+            ],
+            "details": "# Add all metrics to the mlx.metrics module\n# Ensure proper imports and exports\n\n# Example integration code:\n\n# In mlx/metrics/__init__.py:\nfrom .regression import (\n    mean_squared_error,\n    mean_absolute_error,\n    r_squared,\n    root_mean_squared_error\n)\n\n# Create mlx/metrics/regression.py with all implementations\n\n# Add docstrings with examples for each function:\n\"\"\"\nExample:\n    >>> import mlx.core as mx\n    >>> from mlx.metrics import mean_squared_error\n    >>> predictions = mx.array([3.0, 4.0, 5.0])\n    >>> targets = mx.array([2.5, 4.0, 5.5])\n    >>> mse = mean_squared_error(predictions, targets)\n    >>> print(mse)  # Expected output: 0.1667\n\"\"\"\n\n# Include type hints for all functions",
+            "status": "pending",
+            "testStrategy": "Verify that all metrics are correctly exported from the module. Test importing and using each metric from the main mlx.metrics namespace. Ensure documentation is complete with examples. Check that type hints are correct and helpful."
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Create example notebooks for data loading and training",
+        "description": "Develop comprehensive example notebooks that demonstrate the end-to-end workflow using the new data loading and training utilities.",
+        "details": "Create Jupyter notebooks that showcase:\n1. How to create custom Dataset implementations\n2. How to use DataLoader for batching and iteration\n3. How to integrate the progress bar into training loops\n4. How to use metrics for evaluation\n5. Complete training examples with common datasets (e.g., MNIST)\n\nThe notebooks should be well-documented with explanatory text and comments. They should follow best practices and demonstrate the most efficient usage patterns. Include examples of both classification and regression tasks if possible.",
+        "testStrategy": "Execute the notebooks end-to-end to verify they run without errors. Test with different runtime environments (local, cloud) to ensure portability. Have team members review for clarity and correctness. Ensure the examples demonstrate real-world usage patterns.",
+        "priority": "low",
+        "dependencies": [
+          3,
+          5,
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create custom Dataset implementation notebook",
+            "description": "Develop a Jupyter notebook that demonstrates how to create and use custom Dataset implementations in MLX. This notebook will serve as a foundational example for data handling.",
+            "dependencies": [],
+            "details": "Create a notebook named 'custom_dataset_implementation.ipynb' that includes:\n1. Introduction to the Dataset concept in MLX\n2. Implementation of a simple custom Dataset class for a toy dataset\n3. Implementation of a more complex Dataset for a real-world use case (e.g., image classification)\n4. Examples of dataset transformations and preprocessing\n5. Best practices and common pitfalls\n6. Performance considerations\n\nEnsure the notebook has clear markdown explanations, commented code, and runs end-to-end without errors.",
+            "status": "pending",
+            "testStrategy": "Execute the notebook in different environments to ensure portability. Verify all code cells run without errors. Have team members review for clarity and correctness."
+          },
+          {
+            "id": 2,
+            "title": "Create DataLoader and batching notebook",
+            "description": "Develop a Jupyter notebook that demonstrates how to use DataLoader for efficient data batching and iteration in training loops.",
+            "dependencies": [
+              "14.1"
+            ],
+            "details": "Create a notebook named 'dataloader_batching.ipynb' that includes:\n1. Introduction to the DataLoader concept\n2. Examples of creating DataLoader instances with different configurations\n3. Demonstration of batching strategies (sequential, shuffled)\n4. Implementation of custom collate functions\n5. Examples of multi-processing data loading\n6. Performance optimization techniques\n7. Integration with custom Dataset implementations from the previous notebook\n\nInclude visualizations of batched data where appropriate and ensure all examples are runnable.",
+            "status": "pending",
+            "testStrategy": "Test with various batch sizes and dataset sizes to demonstrate scalability. Verify memory usage patterns are efficient. Ensure all code runs without errors."
+          },
+          {
+            "id": 3,
+            "title": "Create training loop with progress bar notebook",
+            "description": "Develop a Jupyter notebook that demonstrates how to implement effective training loops with progress bars for model training visualization.",
+            "dependencies": [
+              "14.2"
+            ],
+            "details": "Create a notebook named 'training_loop_progress.ipynb' that includes:\n1. Basic training loop structure in MLX\n2. Integration of the progress bar from mlx.utils.training\n3. Examples of different progress bar configurations\n4. Handling of training phases (train/validation)\n5. Displaying metrics during training\n6. Early stopping implementation\n7. Checkpoint saving with progress updates\n\nEnsure the notebook demonstrates both console and notebook-friendly progress visualization options.",
+            "status": "pending",
+            "testStrategy": "Run the notebook with different training configurations to verify progress bar functionality. Test in both local and cloud environments to ensure compatibility."
+          },
+          {
+            "id": 4,
+            "title": "Create metrics and evaluation notebook",
+            "description": "Develop a Jupyter notebook that demonstrates how to use metrics for model evaluation and performance tracking during and after training.",
+            "dependencies": [
+              "14.3"
+            ],
+            "details": "Create a notebook named 'metrics_evaluation.ipynb' that includes:\n1. Overview of available metrics in mlx.metrics\n2. Implementation of common evaluation metrics (accuracy, precision, recall, F1)\n3. Custom metric implementation\n4. Tracking metrics during training\n5. Visualization of metric trends\n6. Model comparison using metrics\n7. Evaluation on test datasets\n\nInclude examples for both classification and regression tasks with appropriate metrics for each.",
+            "status": "pending",
+            "testStrategy": "Verify metric calculations against known reference implementations. Test with edge cases (e.g., imbalanced classes). Ensure visualizations render correctly in different environments."
+          },
+          {
+            "id": 5,
+            "title": "Create end-to-end MNIST training example notebook",
+            "description": "Develop a comprehensive Jupyter notebook that combines all previous concepts into a complete end-to-end training example using the MNIST dataset.",
+            "dependencies": [
+              "14.1",
+              "14.2",
+              "14.3",
+              "14.4"
+            ],
+            "details": "Create a notebook named 'mnist_end_to_end.ipynb' that includes:\n1. Loading and preprocessing the MNIST dataset\n2. Creating custom Dataset and DataLoader implementations\n3. Defining a simple neural network model\n4. Implementing a complete training loop with progress bar\n5. Evaluating model performance with metrics\n6. Visualizing training progress and results\n7. Model saving and loading\n8. Inference examples with trained model\n\nEnsure the notebook is extensively documented with explanations of each step and follows best practices for MLX usage.",
+            "status": "pending",
+            "testStrategy": "Execute the notebook end-to-end to verify it trains successfully. Compare results with expected MNIST performance benchmarks. Test with different hyperparameters to demonstrate flexibility."
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Write comprehensive documentation",
+        "description": "Create detailed documentation for all new modules and classes, including API references, usage guides, and examples.",
+        "details": "Develop comprehensive documentation that includes:\n1. API reference for all new classes and functions\n2. Usage guides with code examples\n3. Tutorials for common workflows\n4. Integration with MLX's existing documentation system\n\nThe documentation should follow MLX's documentation style and be accessible to users with varying levels of experience. Include both basic usage patterns and advanced techniques. Ensure all parameters, return values, and exceptions are clearly documented.",
+        "testStrategy": "Review documentation for accuracy, completeness, and clarity. Test code examples to ensure they work as described. Have team members and potential users review the documentation for usability. Check that documentation builds correctly and integrates with the existing docs.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create API reference documentation for all modules and classes",
+            "description": "Generate comprehensive API reference documentation for all new modules and classes, including detailed descriptions of parameters, return values, and exceptions.",
+            "dependencies": [],
+            "details": "1. Review all implemented modules and classes to identify what needs documentation\n2. Create a standardized template for API documentation that includes sections for: class/function signature, parameters, return values, exceptions, and examples\n3. Document each class, method, and function with detailed type information\n4. Ensure all parameters are clearly explained with their types, default values, and purpose\n5. Document return values with their types and meaning\n6. List all possible exceptions that might be raised and under what conditions\n7. Follow MLX's existing documentation style and formatting conventions\n8. Use docstring format compatible with MLX's documentation generation system",
+            "status": "pending",
+            "testStrategy": "Review documentation for completeness by comparing against the codebase. Verify that all public APIs are documented. Run documentation generation tools to ensure proper formatting and no errors."
+          },
+          {
+            "id": 2,
+            "title": "Develop usage guides with code examples",
+            "description": "Create practical usage guides for each module with clear, runnable code examples that demonstrate common use cases.",
+            "dependencies": [
+              "15.1"
+            ],
+            "details": "1. For each module, identify the most common use cases and workflows\n2. Create step-by-step guides that walk users through these use cases\n3. Write clear, concise code examples that demonstrate each feature\n4. Include examples ranging from basic to advanced usage\n5. Ensure all code examples are runnable and produce the expected results\n6. Include explanations of the code and expected outputs\n7. Organize examples by complexity level (beginner, intermediate, advanced)\n8. Add notes about best practices and potential pitfalls",
+            "status": "pending",
+            "testStrategy": "Execute all code examples to verify they run without errors and produce the expected outputs. Have team members review for clarity and completeness. Test examples with different input data to ensure robustness."
+          },
+          {
+            "id": 3,
+            "title": "Create tutorials for common workflows",
+            "description": "Develop comprehensive tutorials that guide users through complete workflows, from data preparation to model evaluation, using the new modules.",
+            "dependencies": [
+              "15.2"
+            ],
+            "details": "1. Identify 3-5 end-to-end workflows that showcase the capabilities of the new modules\n2. Create step-by-step tutorials for each workflow\n3. Include all necessary code and explanations for each step\n4. Provide sample data or instructions for generating appropriate test data\n5. Explain the rationale behind each step and potential alternatives\n6. Include visualizations and output examples where appropriate\n7. Address common issues and troubleshooting tips\n8. Structure tutorials to build on each other when possible, starting with simpler concepts",
+            "status": "pending",
+            "testStrategy": "Follow each tutorial from start to finish to verify completeness and accuracy. Have users with varying levels of experience test the tutorials and provide feedback. Ensure tutorials work with the latest version of the codebase."
+          },
+          {
+            "id": 4,
+            "title": "Integrate with MLX's existing documentation system",
+            "description": "Ensure all new documentation integrates seamlessly with MLX's existing documentation system, including proper formatting, cross-references, and navigation.",
+            "dependencies": [
+              "15.1",
+              "15.2",
+              "15.3"
+            ],
+            "details": "1. Study MLX's current documentation structure and generation tools\n2. Configure documentation build system to include new modules\n3. Ensure proper cross-referencing between new and existing documentation\n4. Update navigation menus and indices to include new content\n5. Maintain consistent styling and formatting across all documentation\n6. Add appropriate tags and metadata for search functionality\n7. Verify that documentation builds correctly and appears in the expected locations\n8. Update the main documentation landing page to highlight new modules",
+            "status": "pending",
+            "testStrategy": "Build the complete documentation and verify that new content is properly integrated. Check all links and cross-references. Test navigation and search functionality to ensure new content is discoverable. Verify documentation renders correctly on different devices and browsers."
+          },
+          {
+            "id": 5,
+            "title": "Review and finalize documentation",
+            "description": "Conduct a comprehensive review of all documentation for accuracy, completeness, clarity, and consistency, making final revisions based on feedback.",
+            "dependencies": [
+              "15.4"
+            ],
+            "details": "1. Perform a thorough review of all documentation for technical accuracy\n2. Check for consistency in terminology, formatting, and style\n3. Verify that all code examples are up-to-date with the final implementation\n4. Have team members review documentation and provide feedback\n5. If possible, gather feedback from potential users outside the development team\n6. Address all feedback and make necessary revisions\n7. Proofread for grammar, spelling, and clarity\n8. Finalize documentation and prepare for release",
+            "status": "pending",
+            "testStrategy": "Create a checklist of documentation quality criteria and verify each document against it. Have multiple reviewers check documentation from different perspectives (developer, new user, experienced user). Verify all feedback has been addressed appropriately."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-25T17:39:40.583Z",
+      "updated": "2025-07-25T17:39:40.583Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

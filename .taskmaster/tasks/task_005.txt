@@ -1,0 +1,77 @@
+# Task ID: 5
+# Title: Implement core classification metrics
+# Status: pending
+# Dependencies: 4
+# Priority: high
+# Description: Implement essential classification metrics including accuracy, precision, recall, and F1-score in the mlx.metrics module.
+# Details:
+Create optimized implementations of the following metrics:
+1. Accuracy: proportion of correct predictions
+2. Precision: true positives / (true positives + false positives)
+3. Recall: true positives / (true positives + false negatives)
+4. F1-score: 2 * (precision * recall) / (precision + recall)
+
+Each function should:
+- Accept predictions and ground truth as MLX arrays
+- Support both binary and multi-class scenarios
+- Handle edge cases gracefully
+- Be optimized for MLX's computation model
+
+Example implementation for accuracy:
+```python
+def accuracy(predictions, targets):
+    """Calculate accuracy score.
+    
+    Args:
+        predictions: Model predictions, either probabilities or class indices
+        targets: Ground truth labels
+        
+    Returns:
+        Accuracy score as a scalar value
+    """
+    if predictions.ndim > 1 and predictions.shape[1] > 1:
+        # Convert probabilities to class indices
+        predictions = mx.argmax(predictions, axis=1)
+    if targets.ndim > 1 and targets.shape[1] > 1:
+        # Convert one-hot to class indices
+        targets = mx.argmax(targets, axis=1)
+        
+    correct = mx.sum(predictions == targets)
+    total = targets.shape[0]
+    return correct / total
+```
+
+# Test Strategy:
+Create comprehensive unit tests for each metric with various input shapes and types. Test with binary and multi-class scenarios. Compare results against known values for validation. Test edge cases like perfect predictions, all incorrect predictions, and imbalanced classes.
+
+# Subtasks:
+## 1. Implement accuracy metric function [pending]
+### Dependencies: None
+### Description: Create an optimized implementation of the accuracy metric that calculates the proportion of correct predictions.
+### Details:
+Implement the accuracy function that accepts predictions and ground truth as MLX arrays. The function should handle both probability distributions and class indices, supporting both binary and multi-class scenarios. Include proper input validation and edge case handling. Follow the example implementation provided in the task description, ensuring the function is optimized for MLX's computation model.
+
+## 2. Implement precision metric function [pending]
+### Dependencies: 5.1
+### Description: Create an optimized implementation of the precision metric that calculates the ratio of true positives to all predicted positives.
+### Details:
+Implement the precision function that calculates true positives / (true positives + false positives). The function should accept predictions and ground truth as MLX arrays, supporting both binary and multi-class classification. For multi-class, implement micro and macro averaging options. Handle edge cases like zero predicted positives gracefully, potentially using a small epsilon value to avoid division by zero. Ensure the implementation is optimized for MLX's computation model.
+
+## 3. Implement recall metric function [pending]
+### Dependencies: 5.1
+### Description: Create an optimized implementation of the recall metric that calculates the ratio of true positives to all actual positives.
+### Details:
+Implement the recall function that calculates true positives / (true positives + false negatives). The function should accept predictions and ground truth as MLX arrays, supporting both binary and multi-class classification. For multi-class, implement micro and macro averaging options. Handle edge cases like zero actual positives gracefully. Ensure the implementation is optimized for MLX's computation model and follows the same interface pattern as the accuracy function.
+
+## 4. Implement F1-score metric function [pending]
+### Dependencies: 5.2, 5.3
+### Description: Create an optimized implementation of the F1-score metric that calculates the harmonic mean of precision and recall.
+### Details:
+Implement the F1-score function that calculates 2 * (precision * recall) / (precision + recall). The function should accept predictions and ground truth as MLX arrays. Provide two implementation approaches: (1) calling the previously implemented precision and recall functions, and (2) a direct calculation for optimization. Support both binary and multi-class classification with micro and macro averaging options. Handle edge cases where precision and recall are both zero. Ensure the implementation is optimized for MLX's computation model.
+
+## 5. Create comprehensive metrics module interface [pending]
+### Dependencies: 5.1, 5.2, 5.3, 5.4
+### Description: Integrate all implemented classification metrics into a cohesive module with consistent interface and documentation.
+### Details:
+Create a unified interface for all classification metrics in the mlx.metrics module. Ensure consistent function signatures, parameter naming, and return types across all metric functions. Implement a metrics factory or helper functions that can compute multiple metrics at once. Add comprehensive docstrings with examples for each function. Create an __init__.py file that properly exposes all metric functions. Consider adding a confusion_matrix utility function that can be used by multiple metrics for efficiency.
+

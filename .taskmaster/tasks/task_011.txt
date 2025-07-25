@@ -1,0 +1,344 @@
+# Task ID: 11
+# Title: Implement Dice Loss function
+# Status: pending
+# Dependencies: 6
+# Priority: medium
+# Description: Add Dice Loss to mlx.nn.losses to support segmentation tasks.
+# Details:
+Implement the Dice Loss function, which is particularly useful for image segmentation tasks. The Dice coefficient measures the overlap between predicted and ground truth segmentation masks.
+
+Implementation should:
+1. Follow the formula: DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|)
+2. Support smooth factor to prevent division by zero
+3. Work for both binary and multi-class segmentation
+4. Be compatible with MLX's autograd system
+
+Example implementation:
+```python
+def dice_loss(predictions, targets, smooth=1.0, reduction='mean'):
+    """Compute Dice loss for segmentation.
+    
+    Args:
+        predictions: Predicted probabilities after sigmoid/softmax
+        targets: Ground truth masks
+        smooth: Small constant to avoid division by zero
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        Computed Dice loss
+    """
+    # Flatten predictions and targets
+    predictions = predictions.reshape(-1)
+    targets = targets.reshape(-1)
+    
+    # Calculate intersection and union
+    intersection = mx.sum(predictions * targets)
+    union = mx.sum(predictions) + mx.sum(targets)
+    
+    # Calculate Dice coefficient
+    dice = (2.0 * intersection + smooth) / (union + smooth)
+    loss = 1.0 - dice
+    
+    # Apply reduction
+    if reduction == 'mean':
+        return loss
+    elif reduction == 'sum':
+        return loss * predictions.shape[0]
+    else:  # 'none'
+        return loss
+```
+
+# Test Strategy:
+Test with binary and multi-class segmentation examples. Verify behavior with perfect overlap, no overlap, and partial overlap cases. Test with various smooth values. Ensure gradients flow correctly through the loss function.
+
+# Subtasks:
+## 1. Implement basic binary Dice Loss function [pending]
+### Dependencies: None
+### Description: Create the core implementation of Dice Loss for binary segmentation tasks, following the formula DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|) with smooth factor support.
+### Details:
+def dice_loss(predictions, targets, smooth=1.0, reduction='mean'):
+    """Compute Dice loss for binary segmentation.
+    
+    Args:
+        predictions: Predicted probabilities after sigmoid (shape: [batch_size, height, width])
+        targets: Ground truth binary masks (shape: [batch_size, height, width])
+        smooth: Small constant to avoid division by zero
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        Computed Dice loss
+    """
+    # Flatten predictions and targets
+    predictions = predictions.reshape(-1)
+    targets = targets.reshape(-1)
+    
+    # Calculate intersection and union
+    intersection = mx.sum(predictions * targets)
+    union = mx.sum(predictions) + mx.sum(targets)
+    
+    # Calculate Dice coefficient
+    dice = (2.0 * intersection + smooth) / (union + smooth)
+    loss = 1.0 - dice
+    
+    # Apply reduction
+    if reduction == 'mean':
+        return loss
+    elif reduction == 'sum':
+        return loss * predictions.shape[0]
+    else:  # 'none':
+        return loss
+
+## 2. Extend Dice Loss for multi-class segmentation [pending]
+### Dependencies: 11.1
+### Description: Enhance the Dice Loss implementation to support multi-class segmentation by computing the loss for each class and averaging.
+### Details:
+def dice_loss_multiclass(predictions, targets, smooth=1.0, reduction='mean'):
+    """Compute Dice loss for multi-class segmentation.
+    
+    Args:
+        predictions: Predicted probabilities after softmax 
+                    (shape: [batch_size, num_classes, height, width])
+        targets: One-hot encoded ground truth masks 
+                (shape: [batch_size, num_classes, height, width])
+        smooth: Small constant to avoid division by zero
+        reduction: 'mean', 'sum', or 'none'
+        
+    Returns:
+        Computed Dice loss averaged over classes
+    """
+    # Get number of classes
+    num_classes = predictions.shape[1]
+    
+    # Initialize total loss
+    total_loss = 0.0
+    
+    # Calculate loss for each class
+    for cls in range(num_classes):
+        pred_cls = predictions[:, cls]
+        target_cls = targets[:, cls]
+        
+        # Use the binary dice loss implementation
+        cls_loss = dice_loss(pred_cls, target_cls, smooth, 'none')
+        total_loss += cls_loss
+    
+    # Average over classes
+    loss = total_loss / num_classes
+    
+    # Apply reduction
+    if reduction == 'mean':
+        return mx.mean(loss)
+    elif reduction == 'sum':
+        return mx.sum(loss)
+    else:  # 'none'
+        return loss
+
+## 3. Create unified Dice Loss interface with class weighting [pending]
+### Dependencies: 11.1, 11.2
+### Description: Develop a unified interface for Dice Loss that handles both binary and multi-class cases automatically, with support for class weighting to handle imbalanced datasets.
+### Details:
+def dice_loss(predictions, targets, smooth=1.0, reduction='mean', weight=None):
+    """Unified Dice loss for both binary and multi-class segmentation.
+    
+    Args:
+        predictions: Predicted probabilities after sigmoid/softmax
+                    Binary: [batch_size, height, width] or [batch_size, 1, height, width]
+                    Multi-class: [batch_size, num_classes, height, width]
+        targets: Ground truth masks with same shape as predictions
+        smooth: Small constant to avoid division by zero
+        reduction: 'mean', 'sum', or 'none'
+        weight: Optional class weights tensor of shape [num_classes]
+               to handle class imbalance
+        
+    Returns:
+        Computed Dice loss
+    """
+    # Determine if binary or multi-class based on shape
+    if len(predictions.shape) == 3 or (len(predictions.shape) == 4 and predictions.shape[1] == 1):
+        # Binary case
+        if len(predictions.shape) == 4:
+            predictions = predictions.squeeze(1)
+            if len(targets.shape) == 4:
+                targets = targets.squeeze(1)
+        return dice_loss_binary(predictions, targets, smooth, reduction)
+    else:
+        # Multi-class case
+        return dice_loss_multiclass(predictions, targets, smooth, reduction, weight)
+
+def dice_loss_binary(predictions, targets, smooth=1.0, reduction='mean'):
+    # Implementation from subtask 11.1
+    # ...
+
+def dice_loss_multiclass(predictions, targets, smooth=1.0, reduction='mean', weight=None):
+    """Multi-class Dice loss with optional class weighting."""
+    num_classes = predictions.shape[1]
+    
+    # Initialize total loss
+    total_loss = 0.0
+    
+    # Calculate loss for each class
+    for cls in range(num_classes):
+        pred_cls = predictions[:, cls]
+        target_cls = targets[:, cls]
+        
+        # Calculate binary dice loss for this class
+        cls_loss = dice_loss_binary(pred_cls, target_cls, smooth, 'none')
+        
+        # Apply class weighting if provided
+        if weight is not None:
+            cls_loss = cls_loss * weight[cls]
+        
+        total_loss += cls_loss
+    
+    # Normalize by sum of weights or number of classes
+    if weight is not None:
+        total_loss = total_loss / mx.sum(weight)
+    else:
+        total_loss = total_loss / num_classes
+    
+    # Apply reduction
+    if reduction == 'mean':
+        return mx.mean(total_loss)
+    elif reduction == 'sum':
+        return mx.sum(total_loss)
+    else:  # 'none'
+        return total_loss
+
+## 4. Implement DiceLoss as an nn.Module class [pending]
+### Dependencies: 11.3
+### Description: Create a DiceLoss class that inherits from nn.Module to provide a consistent interface with other MLX loss functions and enable easy integration into training loops.
+### Details:
+import mlx.nn as nn
+import mlx.core as mx
+
+class DiceLoss(nn.Module):
+    """Dice Loss module for image segmentation tasks.
+    
+    Computes the Dice Loss between predictions and targets, which is useful
+    for handling imbalanced segmentation problems.
+    
+    Args:
+        smooth (float): Small constant to avoid division by zero
+        reduction (str): Specifies the reduction to apply: 'none', 'mean', 'sum'
+        weight (Optional[mx.array]): Manual rescaling weight for each class
+    """
+    
+    def __init__(self, smooth=1.0, reduction='mean', weight=None):
+        super().__init__()
+        self.smooth = smooth
+        self.reduction = reduction
+        self.weight = weight
+    
+    def __call__(self, predictions, targets):
+        """Forward pass for Dice Loss.
+        
+        Args:
+            predictions: Predicted probabilities after sigmoid/softmax
+                        Binary: [batch_size, height, width] or [batch_size, 1, height, width]
+                        Multi-class: [batch_size, num_classes, height, width]
+            targets: Ground truth masks with same shape as predictions
+            
+        Returns:
+            Computed Dice loss
+        """
+        return dice_loss(predictions, targets, 
+                        smooth=self.smooth, 
+                        reduction=self.reduction, 
+                        weight=self.weight)
+
+## 5. Add documentation and integrate with mlx.nn.losses module [pending]
+### Dependencies: 11.3, 11.4
+### Description: Document the Dice Loss implementation and integrate it with the mlx.nn.losses module to make it available alongside other loss functions.
+### Details:
+# Add to mlx/nn/losses.py
+
+# Import necessary modules
+import mlx.core as mx
+from typing import Optional, Literal
+
+# Add function signature to __all__ list
+__all__ = [..., 'dice_loss', 'DiceLoss']
+
+# Add the functional implementation
+def dice_loss(predictions: mx.array, 
+             targets: mx.array, 
+             smooth: float = 1.0, 
+             reduction: Literal['none', 'mean', 'sum'] = 'mean',
+             weight: Optional[mx.array] = None) -> mx.array:
+    """Compute Dice loss for image segmentation tasks.
+    
+    The Dice loss is useful for handling imbalanced segmentation problems as it
+    focuses on the overlap between predictions and ground truth masks rather than
+    pixel-wise accuracy.
+    
+    Formula: DiceLoss = 1 - (2*|X∩Y|)/(|X|+|Y|)
+    
+    Args:
+        predictions: Predicted probabilities after sigmoid/softmax
+                    Binary: [batch_size, height, width] or [batch_size, 1, height, width]
+                    Multi-class: [batch_size, num_classes, height, width]
+        targets: Ground truth masks with same shape as predictions
+        smooth: Small constant to avoid division by zero
+        reduction: Specifies the reduction to apply:
+                  'none': no reduction will be applied
+                  'mean': the weighted mean of the output is taken
+                  'sum': the output will be summed
+        weight: Optional class weights tensor of shape [num_classes]
+               to handle class imbalance
+        
+    Returns:
+        Computed Dice loss
+    
+    Examples:
+        >>> # Binary segmentation
+        >>> predictions = mx.sigmoid(logits)  # [batch_size, height, width]
+        >>> loss = dice_loss(predictions, targets)
+        >>>
+        >>> # Multi-class segmentation
+        >>> predictions = mx.softmax(logits, axis=1)  # [batch_size, num_classes, height, width]
+        >>> loss = dice_loss(predictions, targets)
+    """
+    # Implementation from subtask 11.3
+    # ...
+
+# Add the module implementation
+class DiceLoss(nn.Module):
+    """Dice Loss module for image segmentation tasks.
+    
+    Computes the Dice Loss between predictions and targets, which is useful
+    for handling imbalanced segmentation problems.
+    
+    Args:
+        smooth (float): Small constant to avoid division by zero
+        reduction (str): Specifies the reduction to apply: 'none', 'mean', 'sum'
+        weight (Optional[mx.array]): Manual rescaling weight for each class
+    
+    Examples:
+        >>> # Create a Dice Loss instance
+        >>> criterion = nn.DiceLoss(smooth=1.0)
+        >>> # Binary segmentation
+        >>> predictions = mx.sigmoid(logits)
+        >>> loss = criterion(predictions, targets)
+        >>>
+        >>> # Multi-class segmentation with class weights
+        >>> weights = mx.array([0.5, 1.0, 2.0])  # Weight classes differently
+        >>> criterion = nn.DiceLoss(weight=weights)
+        >>> predictions = mx.softmax(logits, axis=1)
+        >>> loss = criterion(predictions, targets)
+    """
+    # Implementation from subtask 11.4
+    # ...
+
+# Add tests to tests/nn/test_losses.py
+def test_dice_loss():
+    # Test binary case
+    # Test multi-class case
+    # Test with different reduction modes
+    # Test with class weights
+    # ...
+
+def test_dice_loss_module():
+    # Test the module implementation
+    # ...
+
+# Update documentation in docs/source/nn.rst to include the new loss function
+

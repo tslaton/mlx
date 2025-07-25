@@ -1,0 +1,109 @@
+# Task ID: 12
+# Title: Implement common dataset transformations
+# Status: pending
+# Dependencies: 2
+# Priority: medium
+# Description: Create a set of common data transformation utilities to preprocess data before feeding it to models.
+# Details:
+Implement a collection of data transformation utilities that:
+1. Can be composed together in a pipeline
+2. Support common operations like normalization, resizing, cropping, and augmentation
+3. Work seamlessly with the Dataset class
+
+Example implementation:
+```python
+class Transform:
+    """Base class for all transforms"""
+    def __call__(self, sample):
+        raise NotImplementedError
+
+class Compose(Transform):
+    """Compose multiple transforms together"""
+    def __init__(self, transforms):
+        self.transforms = transforms
+        
+    def __call__(self, sample):
+        for transform in self.transforms:
+            sample = transform(sample)
+        return sample
+
+class Normalize(Transform):
+    """Normalize tensor values"""
+    def __init__(self, mean, std):
+        self.mean = mean
+        self.std = std
+        
+    def __call__(self, sample):
+        return (sample - self.mean) / self.std
+
+# Additional transforms: Resize, RandomCrop, RandomFlip, etc.
+```
+
+The implementation should be efficient and compatible with MLX's array operations.
+
+# Test Strategy:
+Test each transform individually with various input types and shapes. Test composition of multiple transforms. Verify that transformations produce the expected output. Test with edge cases like empty arrays or extreme values.
+
+# Subtasks:
+## 1. Implement Transform base class and Compose transform [pending]
+### Dependencies: None
+### Description: Create the foundational Transform base class that all transforms will inherit from, and implement the Compose transform that allows chaining multiple transforms together.
+### Details:
+Create two classes:
+
+1. `Transform`: An abstract base class that defines the interface for all transforms with a `__call__` method.
+2. `Compose`: A concrete transform that takes a list of transforms and applies them sequentially.
+
+Ensure the implementation follows the example structure and is compatible with MLX's array operations. The `Compose` transform should handle edge cases like empty transform lists.
+
+## 2. Implement normalization transforms [pending]
+### Dependencies: 12.1
+### Description: Create transforms for normalizing data, including standard normalization, min-max scaling, and standardization.
+### Details:
+Implement the following normalization transforms:
+
+1. `Normalize`: Normalize tensor values using mean and standard deviation
+2. `MinMaxScale`: Scale values to a specific range (default 0-1)
+3. `Standardize`: Transform data to have zero mean and unit variance
+
+Each transform should work with MLX arrays and handle both single samples and batches of data. Include options for channel-wise normalization for image data.
+
+## 3. Implement image resizing and cropping transforms [pending]
+### Dependencies: 12.1
+### Description: Create transforms for resizing and cropping images, including both deterministic and random variants.
+### Details:
+Implement the following image transformation classes:
+
+1. `Resize`: Resize images to a specified size
+2. `CenterCrop`: Crop the center part of an image
+3. `RandomCrop`: Randomly crop an image
+4. `RandomResizedCrop`: Randomly crop and resize an image
+
+Ensure these transforms work with MLX arrays and handle both single images and batches. Include parameters for interpolation methods where applicable.
+
+## 4. Implement data augmentation transforms [pending]
+### Dependencies: 12.1
+### Description: Create transforms for data augmentation, including flipping, rotation, color jittering, and other common augmentation techniques.
+### Details:
+Implement the following data augmentation transforms:
+
+1. `RandomHorizontalFlip`: Randomly flip images horizontally
+2. `RandomVerticalFlip`: Randomly flip images vertically
+3. `RandomRotation`: Randomly rotate images by a specified angle range
+4. `ColorJitter`: Randomly change brightness, contrast, saturation, and hue
+5. `RandomErasing`: Randomly erase rectangular regions from images
+
+Each transform should include a probability parameter where appropriate and work efficiently with MLX arrays.
+
+## 5. Integrate transforms with Dataset class [pending]
+### Dependencies: 12.1, 12.2, 12.3, 12.4
+### Description: Ensure all transforms work seamlessly with the Dataset class and implement utility functions for common transform combinations.
+### Details:
+1. Create example implementations showing how to use transforms with the Dataset class
+2. Implement utility functions for common transform combinations (e.g., `get_train_transforms()`, `get_eval_transforms()`)
+3. Add documentation and usage examples for all transforms
+4. Ensure efficient application of transforms during dataset iteration
+5. Implement a method to visualize the effect of transforms on sample data
+
+Test the integration with various dataset types and ensure transforms are applied correctly during data loading.
+
