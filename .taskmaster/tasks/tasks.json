@@ -207,7 +207,7 @@
         "testStrategy": "Verify that the module can be imported correctly with `import mlx.metrics`. Ensure that the module structure passes all linting checks and follows project conventions.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -215,7 +215,7 @@
             "description": "Create the basic directory structure for the mlx.metrics module and implement the __init__.py file with proper docstrings and version information.",
             "dependencies": [],
             "details": "1. Create a new directory named 'metrics' within the mlx package directory\n2. Create an __init__.py file in the metrics directory\n3. Add module-level docstring explaining the purpose of the metrics module\n4. Include version information (__version__) consistent with MLX's versioning scheme\n5. Set up __all__ list to control what gets exported when using 'from mlx.metrics import *'",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the directory structure exists and the __init__.py file can be properly imported. Check that the module-level docstring is comprehensive and follows project conventions."
           },
           {
@@ -226,7 +226,7 @@
               "4.1"
             ],
             "details": "1. Identify common evaluation metrics needed for machine learning (accuracy, precision, recall, F1, etc.)\n2. Create placeholder function signatures with proper type hints in the __init__.py file\n3. Organize metrics into logical categories (classification, regression, etc.)\n4. Ensure naming conventions are consistent with the rest of MLX\n5. Update the __all__ list to include all planned public functions and classes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Review the API design with team members to ensure it covers necessary metrics. Verify that function signatures have appropriate type hints and follow MLX's API design patterns."
           },
           {
@@ -237,7 +237,7 @@
               "4.2"
             ],
             "details": "1. Write detailed docstrings for each planned function following NumPy/SciPy docstring format\n2. Include parameter descriptions, return value details, and examples in each docstring\n3. Add usage examples that demonstrate how to use each metric\n4. Document any mathematical formulas or algorithms used in the metrics\n5. Add references to relevant papers or resources where applicable",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Run documentation generation tools to ensure docstrings are properly formatted. Review documentation for clarity, completeness, and adherence to project standards."
           },
           {
@@ -248,7 +248,7 @@
               "4.1"
             ],
             "details": "1. Update the main mlx/__init__.py file to import and expose the metrics module\n2. Add 'metrics' to the __all__ list in the main mlx/__init__.py file\n3. Ensure proper relative imports are used throughout\n4. Verify that circular imports are avoided\n5. Test that the module can be imported using 'import mlx.metrics'",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test importing the module using different import patterns (import mlx.metrics, from mlx import metrics, etc.) to ensure it's properly exposed. Verify that no import errors occur."
           },
           {
@@ -259,7 +259,7 @@
               "4.2"
             ],
             "details": "1. Create subdirectories for different metric categories (classification, regression, etc.)\n2. Add __init__.py files to each subdirectory with appropriate imports and exports\n3. Create placeholder files for each metric category with function stubs\n4. Ensure the main metrics/__init__.py imports from these subdirectories\n5. Update documentation to reflect the organizational structure",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the directory structure follows project conventions. Test importing specific metrics from their categories. Run linting tools to ensure code structure meets project standards."
           }
         ]
@@ -1027,7 +1027,7 @@
     ],
     "metadata": {
       "created": "2025-07-25T17:39:40.583Z",
-      "updated": "2025-07-25T17:39:40.583Z",
+      "updated": "2025-07-26T15:04:52.929Z",
       "description": "Tasks for master context"
     }
   }
